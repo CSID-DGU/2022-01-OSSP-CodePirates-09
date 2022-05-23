@@ -10,3 +10,11 @@ class Main(APIView):
     def post(self, request):
         # print("call by POST")
         return render(request, 'Project/main.html')
+
+
+class Default(APIView):
+    def get(self, request):
+        return render(request, 'Project/default.html')
+
+    def post(self, request):
+        return render(request, 'Project/default.html')
