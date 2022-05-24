@@ -1,20 +1,18 @@
 from django.shortcuts import render
-from rest_framework.views import APIView
+# from rest_framework.views import APIView
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from .models import UserInfo, UserPreference, UserPartner
+from .serializers import UserInfoSerializer, UserPreferenceSerializer, UserPartnerSerializer
+from rest_framework.parsers import JSONParser
 
 
-class SignUp(APIView):
-    def get(self, request):
-        return render(request, "User/signup.html")
-
+@csrf_exempt
+class SignUp():
     def post(self, request):
-        # 구현
-        return render(request, "User/signup.html")
+        pass
 
 
-class SignIn(APIView):
+class SignIn():
     def get(self, request):
-        return render(request, "User/signin.html")
-
-    def post(self, request):
-        # 구현
-        return render(request, "User/signin.html")
+        pass
