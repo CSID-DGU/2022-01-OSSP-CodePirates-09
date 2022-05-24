@@ -6,9 +6,10 @@
 </head>
 <body>
 <h1> signin </h1>
-<form action="POST">
-    ID <input type="text" ,id="userId">
-    PW <input type="password" , id="userPassword">
+<form action="{% url 'signin' %}" method = "post">
+    ID <input type="text" id="userId"> <br>
+    PW <input type="password" id="userPassword"><br>
+    <input type ="submit" value ="login">
 </form>
 </body>
 </html>
