@@ -16,26 +16,3 @@ class SignUp():
 class SignIn():
     def get(self, request):
         pass
-
-<<<<<<< HEAD
-# class SignUp(APIView):
-#     def get(self, request):
-#         return render(request, "User/signup.html")
-#
-#     def post(self, request):
-#         # 구현
-#         return render(request, "User/signup.html")
-#
-#
-# class SignIn(APIView):
-#     def get(self, request):
-#         return render(request, "User/signin.html")
-#
-#     def post(self, request):
-#         # 구현
-#         return render(request, "User/signin.html")
-=======
-    def post(self, request):
-        # 구현
-        return render(request, "User/signin.html")
->>>>>>> 304fb26aeb2e0ab653765633567c12ccaf8b80a2
