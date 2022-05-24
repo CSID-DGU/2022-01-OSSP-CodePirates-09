@@ -49,21 +49,19 @@ def user(request, userId):
 
 
 @csrf_exempt
-class SignUp(View):
-    def signup(self, request):
-        data = json.loads(request.body)
+def signup(request):
+    data = json.loads(request.body)
 
-        return JsonResponse({'message': '회원 가입 성공'}, status=201)
+    return JsonResponse({'message': '회원 가입 성공'}, status=201)
 
 
 @csrf_exempt
-class SignIn(View):
-    def signin(self, request):
-        if request.method == 'POST':
-            data = JSONParser().parse(request)
-            search_userId = data['userId']
-            obj = UserInfo.objects.get(userId=search_userId)
-            if data['userPassword'] == obj.userPassword:
-                return HttpResponse(status=200)
-            else:
-                return HttpResponse(status=400)
+def signin(request):
+    if request.method == 'POST':
+        data = JSONParser().parse(request)
+        search_userId = data['userId']
+        obj = UserInfo.objects.get(userId=search_userId)
+        if data['userPassword'] == obj.userPassword:
+            return HttpResponse(status=200)
+        else:
+            return HttpResponse(status=400)
