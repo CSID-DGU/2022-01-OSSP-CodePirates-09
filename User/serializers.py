@@ -40,6 +40,7 @@ class UserPartnerSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
             'id',
+            'userId',
             'userPartnerName',
             'userPartnerDate',
             'userPartnerImage'

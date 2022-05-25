@@ -13,7 +13,7 @@ class UserInfo(models.Model):
 
 class UserPreference(models.Model):
     id = models.BigAutoField(primary_key=True)
-    userId = models.ForeignKey(UserInfo, on_delete=models.CASCADE)
+    userId = models.ForeignKey('UserInfo', on_delete=models.CASCADE, db_column='userId')
     preferenceEat = models.TextField(blank=True)
     preferencePlay = models.TextField(blank=True)
     preferenceDrink = models.TextField(blank=True)
@@ -23,6 +23,7 @@ class UserPreference(models.Model):
 
 class UserPartner(models.Model):
     id = models.BigAutoField(primary_key=True)
+    userId = models.ForeignKey('UserInfo', on_delete=models.CASCADE, db_column='userId')
     userPartnerName = models.TextField(blank=True)
     userPartnerDate = models.IntegerField(blank=True)
     userPartnerImage = models.TextField(blank=True)
