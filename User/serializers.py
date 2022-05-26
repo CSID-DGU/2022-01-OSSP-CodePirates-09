@@ -3,24 +3,17 @@ from rest_framework import serializers
 from .models import UserInfo, UserPreference, UserPartner
 
 
-class UserInfoSerializer(serializers.ModelSerializer):
+class UserPartnerSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
-            'userName',
-            'userEmail',
+            'id',
             'userId',
-            'userPassword',
-            'userSex',
-            'userAge',
-            'userImage'
+            'userPartnerName',
+            'userPartnerDate',
+            'userPartnerImage'
         )
-        model = UserInfo
+        model = UserPartner
 
-
-# class UserInfoSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = UserInfo
-#         fields = ['userName', 'userEmail', 'userId', 'userPassword', 'userSex', 'userAge', 'userImage']
 
 class UserPreferenceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -36,13 +29,26 @@ class UserPreferenceSerializer(serializers.ModelSerializer):
         model = UserPreference
 
 
-class UserPartnerSerializer(serializers.ModelSerializer):
+class UserInfoSerializer(serializers.ModelSerializer):
+    partner = UserPartnerSerializer(many=True, read_only=True)
+    preference = UserPreferenceSerializer(many=True, read_only=True)
+
     class Meta:
         fields = (
-            'id',
+            'userName',
+            'userEmail',
             'userId',
-            'userPartnerName',
-            'userPartnerDate',
-            'userPartnerImage'
+            'userPassword',
+            'userSex',
+            'userAge',
+            'userImage',
+            'preference',
+            'partner'
         )
-        model = UserPartner
+        model = UserInfo
+
+
+# class UserInfoSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = UserInfo
+#         fields = ['userName', 'userEmail', 'userId', 'userPassword', 'userSex', 'userAge', 'userImage']
