@@ -29,10 +29,10 @@ def user_list(request):
 
 @csrf_exempt
 def user(request, userId):
-    obj = UserPreferenceSerializer.objects.get(userId=userId)
+    obj = UserInfo.objects.get(userId=userId)
 
     if request.method == 'GET':
-        serializer = UserPreferenceSerializer(obj)
+        serializer =UserInfoSerializer(obj)
         return JsonResponse(serializer.data, safe=False)
 
     elif request.method == 'PUT':
