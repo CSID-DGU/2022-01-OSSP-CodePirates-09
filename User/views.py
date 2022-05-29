@@ -7,6 +7,7 @@ from django.views import View
 from .models import UserInfo, UserPreference, UserPartner
 from .serializers import UserInfoSerializer, UserPreferenceSerializer, UserPartnerSerializer
 from rest_framework.parsers import JSONParser
+from django.shortcuts import render, redirect
 
 import json
 
@@ -95,9 +96,36 @@ def signin(request):
             login_user = UserInfo.objects.get(userId=data.get('id')) # 아이디가 같은것이 있으면, 객체로 저장
 
             if login_user.userPassword == data.get('password'): # 나중에는 bcrypt를 이용해서 암호화 할 예정
+                request.session['user'] = login_user.userId # session에 유저의 아이디를 기억
                 return JsonResponse({'message' : '로그인 성공'}, status=201) # 성공시 render를 통해 메인화면으로 이동
 
             return JsonResponse({'message' : '비밀번호를 확인해주세요.'}, status=400) # 오류문 출력 이후, 로그인페이지로 이동
         return JsonResponse({'message' : '존재하지 않는 아이디 입니다.'}, status=400) # 다시 로그인 페이지로 이동
 
     return JsonResponse({'message' : 'Error'}, status=400) # 나중에는 render로 페이지 이동을 시킬 예정
+
+
+@csrf_exempt
+def findid(request):
+    if request.method == 'POST': # 메소드가 post로 넘어온 경우
+        data = JSONParser().parse(request) # 넘어온 data를 json 형식으로 변환
+
+        if data.get('name') == "" or data.get('email') == "": # 이름 또는 이메일이 빈 값으로 넘어온경우
+            return JsonResponse({'message' : '이름 또는 이메일을 입력하세요'}, status=400) # 오류문 출력하고, 나중에 페이지 이동 구현
+        # 같은 이름과 이메일을 가지고 여러개의 아이디를 만드는 경우도 고려해야 하는지
+        if UserInfo.objects.filter(userName=data.get('name')).exists(): # 입력받은 이름이 데이터베이스에 저장이 되어 있는 경우
+            find_user = UserInfo.objects.get(userName=data.get('name')) # 입력받은 이름으로 데이터베이스 오브젝트 추출
+
+            if find_user.userEmail == data.get('email'): # 추출된 객체의 이메일과 입력받은 이메일이 같은 경우
+                return JsonResponse({'id':find_user.userId}, status=201) # id를 알려주고, 나중에 페이지 이동 구현
+
+            return JsonResponse({'message' : '이메일을 확인해주세요'}, status=400)
+        return JsonResponse({'message' : '존재하지 않은 사용자입니다.'}, status=400)
+
+    return JsonResponse({'message' : 'Error'}, status=400)
+
+@csrf_exempt
+def logout(request): # 로그아웃 실행시
+    del request.session['user'] # 로그인 시 저장했던 session에서 pop을 해서 제거함
+    return redirect('/') # 로그아웃시 초기페이지로 이동 나중에 다시 페이지 이동 설정
+
