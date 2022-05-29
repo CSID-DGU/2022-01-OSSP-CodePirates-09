@@ -6,4 +6,5 @@ urlpatterns = [
     path('user/<str:userId>/', views.user),
     path('signin/', views.signin),
     path('signup/', views.signup),
+    path('findid/', views.findid)
 ]
