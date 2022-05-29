@@ -9,8 +9,11 @@ from .serializers import UserInfoSerializer, UserPreferenceSerializer, UserPartn
 from rest_framework.parsers import JSONParser
 from django.shortcuts import render, redirect
 
-import json
 
+
+import re # 정규 표현식을 지원
+import json
+import bcrypt # 비밀번호 암호화를 위해서 패키지 다운로드
 
 @csrf_exempt
 def user_list(request):
@@ -55,11 +58,29 @@ def signup(request):
     if request.method == 'POST':
         data = JSONParser().parse(request) # 넘어온 requset들을 Json 형태로 변환
 
+        for key, val in data.items(): # json은 key-value 형태 이기 때문에 key,val값으로 for문 진행
+            if val == "" and key: # 만약 빈값으로 넘어온 밸류가 있다면 오류문 출력하고, 나중에 페이지 이동까지 구현
+                return JsonResponse({'message': '입력되지 않은 항목이 있습니다.'}, status=400) # 나중에 페이지 이동 구현
+
+        # if data.get('userId') != data.get('userIdCheck'): # 프론트에서 중복체크 버트를 누르면 checkid 실행, 거기서 checkid가 확정
+        #     return JsonResponse({'message': '아이디 중복체크를 하지 않았습니다.'}, status=400)
+        #
+        # elif data.get('userPassword') != data.get('userPasswordCheck'): # 프론트에서 구현 가능한건인가 ?, 일단 비밀번호 비교
+        #     return JsonResponse({'message' : '입력된 두 비밀번호가 다릅니다.'}, status=400)
+        # else:
+        #     regex = re.compile(r'^[a-zA-Z0-9+_.]+@[a-zA-Z0-9-]\.[a-zA-Z0-9-.]+$') # 정규표현을 적어서 이메일 유효성 검사
+        #     vaildEmail = regex.search(data.get('userEmail')) # 입력받은 데이터를 정규표현에 대입하여 검사
+        #     if vaildEmail == None: # 이메일 형식이 유효하지 않는 경우
+        #         return JsonResponse({'message' : '이메일 형식이 올바르지 않습니다.'}, status=400) # 나중에 페이지 이동으로 구현
+
+
+        # 여기 까지 진행 되었다는 것은 빈값이 넘어온 것이 없고, 아이디 중복체크도 진행했고, 비밀번호도 알맞게 입력한 경우
+
         userinfo = { # userInfo과 preference로 나눈이유 - preference가 foreignkey로 참조하기 때문에 나눠서 저장
             "userName":  data.get("userName"),
             "userEmail": data.get("userEmail"),
             "userId": data.get("userId"),
-            "userPassword": data.get("userPassword"),
+            "userPassword": bcrypt.hashpw(data.get("userPassword").encode('UTF-8'), bcrypt.gensalt()).decode('UTF-8'),
             "userSex": data.get("userSex"),
             "userAge": data.get("userAge")
         }
@@ -83,6 +104,13 @@ def signup(request):
 
         return HttpResponse({"message : Error"}, status=400) # 그렇지 않으면 실패
 
+# @csrf_exempt
+# def checkid(request):
+# 아이디 중복체크를 하는 두가지 방벙
+# 첫번째는 3S1S 처럼 프론트에서 중복체크 버튼을 하나 만들고, 기능을 만들어서 회원가입시에 두개의 id와 checkid를 비교해서 중복체크 여부 확인
+# 두번째는 회원가입 기능 코드 안에서 모두 처리 해버리는 경우
+# 결국엔 값을 다 입력하고 전송을 누른 상태에서 잘못된 상황을 인지할 수 있다.
+
 
 @csrf_exempt
 def signin(request):
@@ -95,7 +123,7 @@ def signin(request):
         if UserInfo.objects.filter(userId=data.get('id')).exists(): # 아이디가 같은 것이 있는지 확인
             login_user = UserInfo.objects.get(userId=data.get('id')) # 아이디가 같은것이 있으면, 객체로 저장
 
-            if login_user.userPassword == data.get('password'): # 나중에는 bcrypt를 이용해서 암호화 할 예정
+            if bcrypt.checkpw(data.get('password').encode('UTF-8'), login_user.userPassword.encode('UTF-8')):
                 request.session['user'] = login_user.userId # session에 유저의 아이디를 기억
                 return JsonResponse({'message' : '로그인 성공'}, status=201) # 성공시 render를 통해 메인화면으로 이동
 
