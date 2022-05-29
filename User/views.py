@@ -2,6 +2,7 @@ from django.shortcuts import render
 # from rest_framework.views import APIView
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.forms.models import model_to_dict
 from django.views import View
 from .models import UserInfo, UserPreference, UserPartner
 from .serializers import UserInfoSerializer, UserPreferenceSerializer, UserPartnerSerializer
@@ -84,11 +85,19 @@ def signup(request):
 
 @csrf_exempt
 def signin(request):
-    if request.method == 'POST':
-        data = JSONParser().parse(request)
-        search_userId = data['userId']
-        obj = UserInfo.objects.get(userId=search_userId)
-        if data['userPassword'] == obj.userPassword:
-            return HttpResponse(status=200)
-        else:
-            return HttpResponse(status=400)
+    if request.method == 'POST': # 메소드가 post로 넘어온 경우
+        data = JSONParser().parse(request) # 로그인 화면에서 얻어온 값을 json형태로 저장
+
+        if data.get('id') == "" or data.get('password') == "": # 아이디 비밀번호 중 입력값이 없는 경우
+            return JsonResponse({'message' : '아이디 또는 비밀번호를 입력하세요.'}, status=400)
+
+        if UserInfo.objects.filter(userId=data.get('id')).exists(): # 아이디가 같은 것이 있는지 확인
+            login_user = UserInfo.objects.get(userId=data.get('id')) # 아이디가 같은것이 있으면, 객체로 저장
+
+            if login_user.userPassword == data.get('password'): # 나중에는 bcrypt를 이용해서 암호화 할 예정
+                return JsonResponse({'message' : '로그인 성공'}, status=201) # 성공시 render를 통해 메인화면으로 이동
+
+            return JsonResponse({'message' : '비밀번호를 확인해주세요.'}, status=400) # 오류문 출력 이후, 로그인페이지로 이동
+        return JsonResponse({'message' : '존재하지 않는 아이디 입니다.'}, status=400) # 다시 로그인 페이지로 이동
+
+    return JsonResponse({'message' : 'Error'}, status=400) # 나중에는 render로 페이지 이동을 시킬 예정
