@@ -117,13 +117,13 @@ def signin(request):
     if request.method == 'POST': # 메소드가 post로 넘어온 경우
         data = JSONParser().parse(request) # 로그인 화면에서 얻어온 값을 json형태로 저장
 
-        if data.get('id') == "" or data.get('password') == "": # 아이디 비밀번호 중 입력값이 없는 경우
+        if data.get('userId') == "" or data.get('userPassword') == "": # 아이디 비밀번호 중 입력값이 없는 경우
             return JsonResponse({'message' : '아이디 또는 비밀번호를 입력하세요.'}, status=400)
 
-        if UserInfo.objects.filter(userId=data.get('id')).exists(): # 아이디가 같은 것이 있는지 확인
-            login_user = UserInfo.objects.get(userId=data.get('id')) # 아이디가 같은것이 있으면, 객체로 저장
+        if UserInfo.objects.filter(userId=data.get('userId')).exists(): # 아이디가 같은 것이 있는지 확인
+            login_user = UserInfo.objects.get(userId=data.get('userId')) # 아이디가 같은것이 있으면, 객체로 저장
 
-            if bcrypt.checkpw(data.get('password').encode('UTF-8'), login_user.userPassword.encode('UTF-8')):
+            if bcrypt.checkpw(data.get('userPassword').encode('UTF-8'), login_user.userPassword.encode('UTF-8')):
                 request.session['user'] = login_user.userId # session에 유저의 아이디를 기억
                 return JsonResponse({'message' : '로그인 성공'}, status=201) # 성공시 render를 통해 메인화면으로 이동
 
@@ -138,14 +138,14 @@ def findid(request):
     if request.method == 'POST': # 메소드가 post로 넘어온 경우
         data = JSONParser().parse(request) # 넘어온 data를 json 형식으로 변환
 
-        if data.get('name') == "" or data.get('email') == "": # 이름 또는 이메일이 빈 값으로 넘어온경우
+        if data.get('userName') == "" or data.get('userEmail') == "": # 이름 또는 이메일이 빈 값으로 넘어온경우
             return JsonResponse({'message' : '이름 또는 이메일을 입력하세요'}, status=400) # 오류문 출력하고, 나중에 페이지 이동 구현
         # 같은 이름과 이메일을 가지고 여러개의 아이디를 만드는 경우도 고려해야 하는지
-        if UserInfo.objects.filter(userName=data.get('name')).exists(): # 입력받은 이름이 데이터베이스에 저장이 되어 있는 경우
-            find_user = UserInfo.objects.get(userName=data.get('name')) # 입력받은 이름으로 데이터베이스 오브젝트 추출
+        if UserInfo.objects.filter(userName=data.get('userName')).exists(): # 입력받은 이름이 데이터베이스에 저장이 되어 있는 경우
+            find_user = UserInfo.objects.get(userName=data.get('userName')) # 입력받은 이름으로 데이터베이스 오브젝트 추출
 
-            if find_user.userEmail == data.get('email'): # 추출된 객체의 이메일과 입력받은 이메일이 같은 경우
-                return JsonResponse({'id':find_user.userId}, status=201) # id를 알려주고, 나중에 페이지 이동 구현
+            if find_user.userEmail == data.get('userEmail'): # 추출된 객체의 이메일과 입력받은 이메일이 같은 경우
+                return JsonResponse({'userId':find_user.userId}, status=201) # id를 알려주고, 나중에 페이지 이동 구현
 
             return JsonResponse({'message' : '이메일을 확인해주세요'}, status=400)
         return JsonResponse({'message' : '존재하지 않은 사용자입니다.'}, status=400)
