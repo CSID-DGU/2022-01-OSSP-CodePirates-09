@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=bf769654ad431e4d3f835edc2656c83c&libraries=services"></script>
+</head>
+<body>
+
+<button id="button1" onclick="getCurrentPos();">현재 위치로 검색</button>
+<button id="button2" onclick="search();">직접 검색하기</button>
+<div id="map" style="width:500px;height:400px;visibility:hidden"></div>
+
+<script>
+var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+mapOption = {
+    center: new kakao.maps.LatLng(37.56646, 126.98121), // 지도의 중심좌표
+    level: 3, // 지도의 확대 레벨
+    mapTypeId : kakao.maps.MapTypeId.ROADMAP // 지도종류
+};
+
+var map = new kakao.maps.Map(mapContainer, mapOption);
+
+
+function getCurrentPos(){//현재위치 기반 지도 표시
+	document.getElementById("map").style.visibility = "visible";
+	navigator.geolocation.getCurrentPosition(function (position) {
+		var lat = position.coords.latitude, // 위도
+		lon = position.coords.longitude; // 경도
+        var coords = new kakao.maps.LatLng(lat, lon);
+
+        var marker = new kakao.maps.Marker({
+            map: map,
+            position: coords
+        });
+        map.setCenter(coords);
+});
+};
+
+function search(){//검색 위치 기반 지도 표시
+	document.getElementById("map").style.visibility = "visible";
+	var loc = prompt('주소를 입력하세요', 'ex)서울특별시 중구 필동로 1길 30');
+	var geocoder = new kakao.maps.services.Geocoder();
+	geocoder.addressSearch(loc, function(result, status) {
+	     if (status === kakao.maps.services.Status.OK) {
+	        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+	        var marker = new kakao.maps.Marker({
+	            map: map,
+	            position: coords
+	        });
+	        map.setCenter(coords);
+	    } 
+	});    
+};
+
+</script>
+활동 선택
+<form action="course.jsp" method = "post">
+<select style="width:208px; height:38px" name = "select1" id = "select1">
+<option value="걷기">걷기</option>
+<option value="마시기">마시기</option>
+<option value="놀기">놀기</option>
+<option value="먹기">먹기</option>
+</select> <br>
+<select style="width:208px; height:38px" name = "select2" id = "select2">
+<option value="걷기">걷기</option>
+<option value="마시기">마시기</option>
+<option value="놀기">놀기</option>
+<option value="먹기">먹기</option>
+</select> <br>
+<select style="width:208px; height:38px" name = "select3" id = "select3">
+<option value="걷기">걷기</option>
+<option value="마시기">마시기</option>
+<option value="놀기">놀기</option>
+<option value="먹기">먹기</option>
+</select> <br>
+<input type="submit" id = "submit" value="추천코스 생성" style="width:300px; height:35px"/><br>
+</form>
+<button id="partner">파트너 정보 확인</button><br>
+<button id="mypage">마이페이지</button>
+
+
+
+
+
+
+</body>
+</html> 
