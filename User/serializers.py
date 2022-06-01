@@ -7,7 +7,7 @@ class UserPartnerSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
             'id',
-            'userId',
+            # 'userId',
             'userPartnerName',
             'userPartnerDate',
             'userPartnerImage'
@@ -19,7 +19,7 @@ class UserPreferenceSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
             'id',
-            'userId',
+            # 'userId',
             'preferenceEat',
             'preferencePlay',
             'preferenceDrink',
@@ -30,8 +30,8 @@ class UserPreferenceSerializer(serializers.ModelSerializer):
 
 
 class UserInfoSerializer(serializers.ModelSerializer):
-    partner = UserPartnerSerializer(many=True, read_only=True)
-    preference = UserPreferenceSerializer(many=True, read_only=True)
+    partner = UserPartnerSerializer(read_only=True)
+    preference = UserPreferenceSerializer(read_only=True)
 
     class Meta:
         fields = (
