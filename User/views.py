@@ -76,31 +76,33 @@ def signup(request):
 
         # 여기 까지 진행 되었다는 것은 빈값이 넘어온 것이 없고, 아이디 중복체크도 진행했고, 비밀번호도 알맞게 입력한 경우
 
-        usercreate = UserInfo.objects.create( # User 객체를 하나 생성하게 되면 개인정보 + preference 빈값 + partner 빈값을 가지게 됨
-            userName=  data.get("userName"), # 각각의 key 값에 맞게 데이터를 넣어주게 된다.
-            userEmail= data.get("userEmail"),
-            userId= data.get("userId"),
-            userPassword= bcrypt.hashpw(data.get("userPassword").encode('UTF-8'), bcrypt.gensalt()).decode('UTF-8'),
-            userSex= data.get("userSex"),
-            userAge= data.get("userAge")
-        )
-        usercreate.save() # 생성된 객체를 저장한다.
+        userinfo = { # userInfo과 preference로 나눈이유 - preference가 foreignkey로 참조하기 때문에 나눠서 저장
+            "userName":  data.get("userName"),
+            "userEmail": data.get("userEmail"),
+            "userId": data.get("userId"),
+            "userPassword": bcrypt.hashpw(data.get("userPassword").encode('UTF-8'), bcrypt.gensalt()).decode('UTF-8'),
+            "userSex": data.get("userSex"),
+            "userAge": data.get("userAge")
+        }
 
-        userpreference = UserPreference.objects.create( # 마찬가지로 preference 객체를 생성하게 되면 key에 맞는 값을 넣는다.
-            preferenceEat= data.get("preferenceEat"),
-            preferencePlay= data.get("preferencePlay"),
-            preferenceDrink= data.get("preferenceDrink"),
-            preferenceSee= data.get("preferenceSee"),
-            preferenceWalk= data.get("preferenceWalk")
-        )
-        usercreate.save() # 생성된 preference 객체도 저장한다.
+        userinfo_serializer = UserInfoSerializer(data=userinfo) # userinfo로 저장한 딕셔너리형태 db에 저장
+        if userinfo_serializer.is_valid():
+            userinfo_serializer.save()
+            preference = { # foreignkey로 참조한 자식테이블이기 때문에 나눠서 데이터 저장,
+                # 그리고 userInfo가 선행되어서 저장되어야하기 때문에 if문으로 조건 진행
+                "userId": data.get("userId"),
+                "preferenceEat": data.get("preferenceEat"),
+                "preferencePlay": data.get("preferencePlay"),
+                "preferenceDrink": data.get("preferenceDrink"),
+                "preferenceSee": data.get("preferenceSee"),
+                "preferenceWalk": data.get("preferenceWalk")
+            }
+            prefer_serializer = UserPreferenceSerializer(data=preference) # preference로 저장한 딕셔너리형태 db에 저장
+            if prefer_serializer.is_valid():
+                prefer_serializer.save()
+                return JsonResponse({'message': '회원 가입 성공'}, status=201) # 두 테이블이 모두 저장되면 회원가입 성공 !
 
-        usercreate.preference = userpreference # 생성된 user 객체의 preference 컬럼에 값을 넣어준다.
-        usercreate.save() # 변경된 값이 있으므로 저장을 해준다.
-
-        return JsonResponse({'message': '회원 가입 성공'}, status=201) # 두 테이블이 모두 저장되면 회원가입 성공 !
-
-    return HttpResponse({"message : Error"}, status=400) # 그렇지 않으면 실패
+        return HttpResponse({"message : Error"}, status=400) # 그렇지 않으면 실패
 
 # @csrf_exempt
 # def checkid(request):
