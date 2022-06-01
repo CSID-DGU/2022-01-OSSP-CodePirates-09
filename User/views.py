@@ -88,6 +88,7 @@ def signup(request):
         userinfo_serializer = UserInfoSerializer(data=userinfo) # userinfo로 저장한 딕셔너리형태 db에 저장
         if userinfo_serializer.is_valid():
             userinfo_serializer.save()
+
             preference = { # foreignkey로 참조한 자식테이블이기 때문에 나눠서 데이터 저장,
                 # 그리고 userInfo가 선행되어서 저장되어야하기 때문에 if문으로 조건 진행
                 "userId": data.get("userId"),
@@ -100,7 +101,15 @@ def signup(request):
             prefer_serializer = UserPreferenceSerializer(data=preference) # preference로 저장한 딕셔너리형태 db에 저장
             if prefer_serializer.is_valid():
                 prefer_serializer.save()
-                return JsonResponse({'message': '회원 가입 성공'}, status=201) # 두 테이블이 모두 저장되면 회원가입 성공 !
+
+                partner = {
+                    "userId": data.get('userId')
+                } # 회원가입시 partner 관련 DB도 같이 생성 처음엔 null 값
+                partner_serializer = UserPartnerSerializer(data=partner) # partner로 저장한 딕셔너리 형태 db에 저장
+                if partner_serializer.is_valid():
+                    partner_serializer.save()
+
+                    return JsonResponse({'message': '회원 가입 성공'}, status=201) # 두 테이블이 모두 저장되면 회원가입 성공 !
 
         return HttpResponse({"message : Error"}, status=400) # 그렇지 않으면 실패
 
@@ -175,6 +184,11 @@ def mypage(request): # 아니면 인자로 userId를 받아도 됨
 
         return
 
-    elif request.method == 'DELETE':
 
-        return
+@csrf_exempt
+def deleteuser(request):
+    if request.method == 'DELETE': # method가 DELETE로 들어온 경우
+        user = UserInfo.objects.get(userId=request.session['user']) # userId로 객체 불러와서 저장
+        user.delete() # user 삭제 진행
+        del request.session['user'] # 혹시 모르니 로그아웃 진행
+        return JsonResponse({'message': '회원탈퇴가 완료되었습니다.'}, status=200) # 나중에 페이지 구현완료되면 메인으로 이동

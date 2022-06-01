@@ -24,6 +24,6 @@ class UserPreference(models.Model):
 class UserPartner(models.Model):
     id = models.BigAutoField(primary_key=True)
     userId = models.ForeignKey(UserInfo, on_delete=models.CASCADE, db_column='userId')
-    userPartnerName = models.TextField(blank=True)
-    userPartnerDate = models.IntegerField(blank=True)
-    userPartnerImage = models.TextField(blank=True)
+    userPartnerName = models.TextField(blank=True, null=True)
+    userPartnerDate = models.IntegerField(blank=True, null=True)
+    userPartnerImage = models.TextField(blank=True, null=True)
