@@ -64,14 +64,14 @@ def signup(request):
 
         # if data.get('userId') != data.get('userIdCheck'): # 프론트에서 중복체크 버트를 누르면 checkid 실행, 거기서 checkid가 확정
         #     return JsonResponse({'message': '아이디 중복체크를 하지 않았습니다.'}, status=400)
-        #
-        # elif data.get('userPassword') != data.get('userPasswordCheck'): # 프론트에서 구현 가능한건인가 ?, 일단 비밀번호 비교
-        #     return JsonResponse({'message' : '입력된 두 비밀번호가 다릅니다.'}, status=400)
-        # else:
-        #     regex = re.compile(r'^[a-zA-Z0-9+_.]+@[a-zA-Z0-9-]\.[a-zA-Z0-9-.]+$') # 정규표현을 적어서 이메일 유효성 검사
-        #     vaildEmail = regex.search(data.get('userEmail')) # 입력받은 데이터를 정규표현에 대입하여 검사
-        #     if vaildEmail == None: # 이메일 형식이 유효하지 않는 경우
-        #         return JsonResponse({'message' : '이메일 형식이 올바르지 않습니다.'}, status=400) # 나중에 페이지 이동으로 구현
+
+        if data.get('userPassword') != data.get('userPasswordCheck'): # 프론트에서 구현 가능한건인가 ?, 일단 비밀번호 비교
+            return JsonResponse({'message' : '입력된 두 비밀번호가 다릅니다.'}, status=400)
+        else:
+            regex = re.compile(r"[a-zA-Z0-9_]+@[a-z]+[.][a-z.]+") # 정규표현을 적어서 이메일 유효성 검사
+            vaildEmail = regex.search(data.get('userEmail')) # 입력받은 데이터를 정규표현에 대입하여 검사
+            if vaildEmail == None: # 이메일 형식이 유효하지 않는 경우
+                return JsonResponse({'message' : '이메일 형식이 올바르지 않습니다.'}, status=400) # 나중에 페이지 이동으로 구현
 
 
         # 여기 까지 진행 되었다는 것은 빈값이 넘어온 것이 없고, 아이디 중복체크도 진행했고, 비밀번호도 알맞게 입력한 경우
@@ -147,8 +147,10 @@ def findid(request):
     if request.method == 'POST': # 메소드가 post로 넘어온 경우
         data = JSONParser().parse(request) # 넘어온 data를 json 형식으로 변환
 
-        if data.get('userName') == "" or data.get('userEmail') == "": # 이름 또는 이메일이 빈 값으로 넘어온경우
-            return JsonResponse({'message' : '이름 또는 이메일을 입력하세요'}, status=400) # 오류문 출력하고, 나중에 페이지 이동 구현
+        for key, val in data.items():  # json은 key-value 형태 이기 때문에 key,val값으로 for문 진행
+            if val == "" and key:  # 만약 빈값으로 넘어온 밸류가 있다면 오류문 출력하고, 나중에 페이지 이동까지 구현
+                return JsonResponse({'message': '입력되지 않은 항목이 있습니다.'}, status=400)  # 나중에 페이지 이동 구현
+
         # 같은 이름과 이메일을 가지고 여러개의 아이디를 만드는 경우도 고려해야 하는지
         if UserInfo.objects.filter(userName=data.get('userName')).exists(): # 입력받은 이름이 데이터베이스에 저장이 되어 있는 경우
             find_user = UserInfo.objects.get(userName=data.get('userName')) # 입력받은 이름으로 데이터베이스 오브젝트 추출
@@ -160,6 +162,29 @@ def findid(request):
         return JsonResponse({'message' : '존재하지 않은 사용자입니다.'}, status=400)
 
     return JsonResponse({'message' : 'Error'}, status=400)
+
+@csrf_exempt
+def findpw(request):
+    if request.method == 'POST':
+        data = JSONParser().parse(request)
+
+        for key, val in data.items(): # json은 key-value 형태 이기 때문에 key,val값으로 for문 진행
+            if val == "" and key: # 만약 빈값으로 넘어온 밸류가 있다면 오류문 출력하고, 나중에 페이지 이동까지 구현
+                return JsonResponse({'message': '입력되지 않은 항목이 있습니다.'}, status=400) # 나중에 페이지 이동 구현
+
+        if UserInfo.objects.filter(userName=data.get('userName')).exists():  # 입력받은 이름이 데이터베이스에 저장이 되어 있는 경우
+            find_user = UserInfo.objects.get(userName=data.get('userName'))  # 입력받은 이름으로 데이터베이스 오브젝트 추출
+
+            if find_user.userEmail == data.get('userEmail'):  # 추출된 객체의 이메일과 입력받은 이메일이 같은 경우
+                if find_user.userId == data.get('userId'): # 추출된 객체의 아이디와 입력받은 아이디가 같은 경우
+
+                    return JsonResponse({'userPassword': find_user.userPassword}, status=201)  # 추가로 변경가능하게만들지 고민중
+
+                return JsonResponse({'message' : '아이디를 확인하세요'}, status=400)
+            return JsonResponse({'message': '이메일을 확인하세요.'}, status=400)
+        return JsonResponse({'message':'이름을 확인하세요'}, status=400)
+    return JsonResponse({'message' : 'Error'}, status=400)
+
 
 @csrf_exempt
 def logout(request): # 로그아웃 실행시
@@ -174,15 +199,61 @@ def mypage(request): # 아니면 인자로 userId를 받아도 됨
 
     if request.method == 'GET': # 마이페이지에 데이터를 띄우기 위한 method
         userObj = UserInfo.objects.get(userId=userId) # userId로 userinfo 데이터베이스에 있는 object를 가져옴
-        # print(userObj.preference.preferenceEat)
-        userInformation = UserInfoSerializer(userObj) # 데이터 베이스의 값들을 JSON 형태로 변환해서 저장
-        # print(userInformation.data['preference'])
-        return JsonResponse(userInformation.data,  status =200)
+        preferenceObj = UserPreference.objects.get(userId=userId) # userId로 userPreferenc 데이터베이스에 있는 object를 가져옴
+        partnerObj = UserPartner.objects.get(userId=userId) # userId로 userPartner 데이터베이스에 있는 object를 가져옴
 
-    elif request.method == 'PUT':
-        data = JSONParser().parse(request)
+        info_user = UserInfoSerializer(userObj) # UserInfo 데이터 베이스의 값들을 JSON 형태로 변환해서 저장
+        info_preference = UserPreferenceSerializer(preferenceObj) # userPreference 데이터 베이스의 값들을 JSON 형태로 저장
+        info_partner = UserPartnerSerializer(partnerObj) # userPartner 데이터 베이스의 값들을 JSON 형태로 저장
 
-        return
+        userInfomation = { # userInfo, userPreference, userPartner DB 저장데이터들을 하나로 묶은 형태
+            "user": info_user.data,
+            "preference": info_preference.data,
+            "partner": info_partner.data
+        }
+        # print(userInfomation.get('user'))  # 데이터를 받아서 출력하는 예시
+        # example = userInfomation.get('user') # 데이터를 받아서 출력하는 예시
+        # print(example.get('userName')) # 데이터를 받아서 출력하는 예시
+
+        return JsonResponse(userInfomation,  status =200)
+
+    elif request.method == 'PUT': # 모든 값들이 다 넘어온다는 걸 가정으로 구현, 값을 바꾸지 않아도 기존의 값을 넘긴다는 생각
+        data = JSONParser().parse(request) # 넘어온 값들을 Json으로 저장
+
+        for key, val in data.items():  # json은 key-value 형태 이기 때문에 key,val값으로 for문 진행
+            if val == "" and key:  # 만약 빈값으로 넘어온 밸류가 있다면 오류문 출력하고, 나중에 페이지 이동까지 구현
+                return JsonResponse({'message': '입력되지 않은 항목이 있습니다.'}, status=400)  # 나중에 페이지 이동 구현
+
+        Info_user = UserInfo.objects.get(userId=userId) # DB에 저장되어 있는 userInfo 객체를 반환
+
+        Info_user.userAge = data.get('userAge') # 입력받은 userAge를 db에 수정
+        Info_user.userImage = data.get('userImage') # 입력받은 userImage, 나중에 유효성 검사 필요하면 진행, 아니면 따로 만들어서 진행
+
+        regex = re.compile(r"[a-zA-Z0-9_]+@[a-z]+[.][a-z.]+")  # 정규표현을 적어서 이메일 유효성 검사
+        vaildEmail = regex.search(data.get('userEmail'))  # 입력받은 데이터를 정규표현에 대입하여 검사
+        if vaildEmail == None:  # 이메일 형식이 유효하지 않는 경우
+            return JsonResponse({'message': '이메일 형식이 올바르지 않습니다.'}, status=400)  # 나중에 페이지 이동으로 구현
+        else:
+            Info_user.userEmail = data.get('userEmail') # 유효성 검사를 통과 하면 DB 수정
+
+        if data.get('userPassword') != data.get('userPasswordCheck'): # 비밀번호 수정시 비밀번호가 틀리게 입력하는 경우
+            return JsonResponse({'message':'입력한 비밀번호가 다릅니다.'}, status=400)
+        elif data.get('userPassword') == data.get('userPasswordCheck'): # 입력한 비밀번호가 같은 경우
+            Info_user.userPassword = bcrypt.hashpw(data.get("userPassword").encode('UTF-8'), bcrypt.gensalt()).decode('UTF-8')
+                # bcrypt를 이용해서 DB에 저장
+
+        Info_preference = UserPreference.objects.get(userId=userId) # userId를 이용하여 사용자의 선호도 객체 반환
+        Info_preference.preferenceEat = data.get('preferenceEat') # 입력된 값으로 db 값 변경
+        Info_preference.preferencePlay = data.get('preferencePlay') # 입력된 값으로 db 값 변경
+        Info_preference.preferenceDrink = data.get('preferenceDrink') # 입력된 값으로 db 값 변경
+        Info_preference.preferenceSee = data.get('preferenceSee') # 입력된 값으로 db 값 변경
+        Info_preference.preferenceWalk = data.get('preferenceWalk') # 입력된 값으로 db 값 변경
+
+        Info_user.save() # 변경된 사항을 db에 반영하고 저장
+        Info_preference.save() # 변경된 사항을 db에 반영하고 저장
+
+        return JsonResponse({'message':'회원정보가 수정되었습니다.'}, status=200)
+    return JsonResponse({'message':'Error'}, status=400)
 
 
 @csrf_exempt
