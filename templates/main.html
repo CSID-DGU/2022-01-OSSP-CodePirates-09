@@ -3,12 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=bf769654ad431e4d3f835edc2656c83c&libraries=services"></script>
+    <link rel="stylesheet" href="bootstrap.css">
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <style>
+    body{
+  		margin: 0 auto;
+  		width: 300px;
+	}
+	.wrapper {
+	 	position : relative;
+	 	width:500px;
+	 	height:400px;
+	 	left : 50%;
+	 	margin : 0px 0px 0px -250px;
+	}
+	</style>
 </head>
 <body>
 
-<button id="button1" onclick="getCurrentPos();">현재 위치로 검색</button>
-<button id="button2" onclick="search();">직접 검색하기</button>
-<div id="map" style="width:500px;height:400px;visibility:hidden"></div>
+<button id="button1" class="btn btn-outline-secondary" onclick="getCurrentPos();">현재 위치로 검색</button>
+<button id="button2" class="btn btn-outline-secondary" onclick="search();">직접 검색하기</button>
+<div id="map" class = "wrapper"></div>
 
 <script>
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div
@@ -27,7 +42,6 @@ function getCurrentPos(){//현재위치 기반 지도 표시
 		var lat = position.coords.latitude, // 위도
 		lon = position.coords.longitude; // 경도
         var coords = new kakao.maps.LatLng(lat, lon);
-
         var marker = new kakao.maps.Marker({
             map: map,
             position: coords
@@ -55,28 +69,28 @@ function search(){//검색 위치 기반 지도 표시
 </script>
 활동 선택
 <form action="course.jsp" method = "post">
-<select style="width:208px; height:38px" name = "select1" id = "select1">
+<select style="width:208px; height:38px" name = "select1" id = "select1" class = "form-select">
 <option value="걷기">걷기</option>
 <option value="마시기">마시기</option>
 <option value="놀기">놀기</option>
 <option value="먹기">먹기</option>
 </select> <br>
-<select style="width:208px; height:38px" name = "select2" id = "select2">
+<select style="width:208px; height:38px" name = "select2" id = "select2" class = "form-select">
 <option value="걷기">걷기</option>
 <option value="마시기">마시기</option>
 <option value="놀기">놀기</option>
 <option value="먹기">먹기</option>
 </select> <br>
-<select style="width:208px; height:38px" name = "select3" id = "select3">
+<select style="width:208px; height:38px" name = "select3" id = "select3" class = "form-select">
 <option value="걷기">걷기</option>
 <option value="마시기">마시기</option>
 <option value="놀기">놀기</option>
 <option value="먹기">먹기</option>
 </select> <br>
-<input type="submit" id = "submit" value="추천코스 생성" style="width:300px; height:35px"/><br>
+<input type="submit" class = "btn btn-outline-secondary" id = "submit" value="추천코스 생성" style="width:300px; height:35px"/><br>
 </form>
-<button id="partner">파트너 정보 확인</button><br>
-<button id="mypage">마이페이지</button>
+<button id="partner" class = "btn btn-outline-secondary" >파트너 정보 확인</button><br>
+<button id="mypage" class = "btn btn-outline-secondary" >마이페이지</button>
 
 
 
