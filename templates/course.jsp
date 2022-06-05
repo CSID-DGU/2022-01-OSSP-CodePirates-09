@@ -115,8 +115,6 @@
         iwContent = [];
         iwPosition = [];
         positions = [];
-        var x=0;
-        var y=0;
         for(var i=0;i<3;i++){
         	positions[i] = new kakao.maps.LatLng(document.getElementsByTagName('li')[i].dataset.lat, document.getElementsByTagName('li')[i].dataset.lon);
         	marker = new kakao.maps.Marker({
@@ -134,10 +132,8 @@
             });
         	kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
             kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
-            x = x + document.getElementsByTagName('li')[i].dataset.lat;
-            y = y + document.getElementsByTagName('li')[i].dataset.lon;
     	}
-        map.setCenter(x/3,y/3);
+        map.setCenter(new kakao.maps.LatLng(document.getElementsByTagName('li')[1].dataset.lat,document.getElementsByTagName('li')[1].dataset.lon));
     	
     }
     function rootc(){
