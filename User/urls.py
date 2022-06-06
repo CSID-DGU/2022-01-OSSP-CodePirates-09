@@ -10,5 +10,6 @@ urlpatterns = [
     path('logout/', views.logout),
     path('mypage/', views.mypage),
     path('deleteuser/', views.deleteuser),
-    path('findpw/', views.findpw)
+    path('findpw/', views.findpw),
+    path('crawling/', views.crawling)
 ]
