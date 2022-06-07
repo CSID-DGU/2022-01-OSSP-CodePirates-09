@@ -118,4 +118,146 @@
 
 </div>
 </body>
+    
+<script>
+
+$(function(){
+	<!-- 회원가입 버튼 -->
+	$('#signUpSubmit').click(function(e)
+	{
+		e.preventDefault();
+		
+		<!-- 사용자 이름 확인 -->
+		if($("#userName").val()=='')
+		{
+			alert('이름을 입력하세요.');
+			$("#userName").focus();
+			return false;
+		}
+		
+		<!-- 사용자 이메일 확인 -->
+		var userEmail = $('#userEmail').val();
+		if(userEmail=='')
+		{
+			alert('이메일을 입력하세요.');
+			$("userEmail").focus();
+			return false;
+		}
+		else
+		{
+			var userEmailCheck = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+			if(!userEmailCheck.test(userEmail))
+				{
+					alert('이메일 주소가 유효하지 않습니다. 예시) abc@email.com');
+					$("#userEmail").focus();
+					return false;
+				}
+		}
+		
+		<!-- 비밀번호 확인 -->
+		if($("#userPassword").val()=='')
+		{
+			alert('비밀번호를 입력하세요.');
+			$("#userPassword").focus();
+			return false;
+		}
+		
+		<!-- 비밀번호 재확인 -->
+		if($("#userPasswordCheck").val()=='')
+		{
+			alert('비밀번호를 입력하세요.');
+			$("#userPasswordCheck").focus();
+			return false;
+		}
+		
+		<!-- 비밀번호 재확인 검증 -->
+		if($("#userPasswordCheck").val()=="#userPassword".val())
+		{
+			alert('비밀번호가 동일하지 않습니다.');
+			return false;
+		}
+		
+		$.ajax
+		({
+			url:'register.php',
+			type:'POST',
+			data:
+			{
+				userName:$("#userName").val(),
+				userEmail:$("#userEmail").val(),
+				userPassword:$("#userPassword").val(),
+				userPreference:$("#userPreference").val(),
+				partnerEmail:$("#partnerEmail").val()
+			},
+			dataType:"json",
+			success:function(response)
+			{
+				if(response.result==1)
+				{
+					alert('가입을 환영합니다.');
+					location.replace('../index.php'); // 화면 갱신
+				}
+				else if(respons.result==0)
+				{
+					alert('이미 가입된 이메일입니다.');
+				}
+				else if(response.result==2)
+				{
+					alert('입력된 사항이 없습니다.');
+				}
+				else
+				{
+					alert('등록 중 에러가 발생했습니다.');
+				}
+			},
+			error.function(jqXHR, textStatus, errorThrown)
+			{
+				alert("arjax error : " + textStatus + "\n" + errorThrown);
+			}
+		});
+	});
+});
+
+<!-- register.php 파일, PDO 클래스 활용 -->
+<?php
+extract($_POST);
+if(isset($_POST))
+{
+	require_once '${pageContext.request.contextPath}/config/config.php';
+	$c=new MembeClass();
+	// 동일한 userEmail 등록 확인
+	if($c->isUserExisted($userID))
+	{
+		echo '{"result":"0"}';	// echo json_encode(array('result=>'0'));과 동일
+	}
+	else
+	{
+		// 회원 등록
+		$user=$c->storeUser($userEmail, $userName, $userPassword, $userPreference, $partnerEmail);
+		if($user)
+		{
+			// 회원 등록 성공
+			if(!isset($_SESSION))
+			{
+				session_start();
+			}
+			$_SESSION('userEmail')=$user['userEmail'];
+			$_SESSION('admin')=$user['admin'];
+			echo json_encode(array('result=>'1'));
+		}
+		else
+		{
+			// 회원 등록 실패
+			echo json_encode(array('result=>'-1'));
+		}
+	}
+}
+else
+{
+	// 입력받은 데이터에 오류 존재
+	echo json_encode(array('result=>'-2'));
+}
+?>
+
+</script>
 </html>
