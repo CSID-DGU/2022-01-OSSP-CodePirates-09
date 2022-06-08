@@ -15,15 +15,5 @@ class UserPreference(models.Model):
     id = models.BigAutoField(primary_key=True)
     userId = models.ForeignKey(UserInfo, on_delete=models.CASCADE, db_column='userId')
     preferenceEat = models.TextField(blank=True)
-    preferencePlay = models.TextField(blank=True)
     preferenceDrink = models.TextField(blank=True)
-    preferenceSee = models.TextField(blank=True)
-    preferenceWalk = models.TextField(blank=True)
-
-
-class UserPartner(models.Model):
-    id = models.BigAutoField(primary_key=True)
-    userId = models.ForeignKey(UserInfo, on_delete=models.CASCADE, db_column='userId')
-    userPartnerName = models.TextField(blank=True, null=True)
-    userPartnerDate = models.IntegerField(blank=True, null=True)
-    userPartnerImage = models.TextField(blank=True, null=True)
+    preferenceCafe = models.TextField(blank=True)

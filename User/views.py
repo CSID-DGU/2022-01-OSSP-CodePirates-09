@@ -4,8 +4,8 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
 from django.views import View
-from .models import UserInfo, UserPreference, UserPartner
-from .serializers import UserInfoSerializer, UserPreferenceSerializer, UserPartnerSerializer
+from .models import UserInfo, UserPreference
+from .serializers import UserInfoSerializer, UserPreferenceSerializer
 from rest_framework.parsers import JSONParser
 from django.shortcuts import render, redirect
 from selenium import webdriver
@@ -60,7 +60,18 @@ def user(request, userId):
 @csrf_exempt
 def signup(request):
     if request.method == 'POST':
-        data = JSONParser().parse(request)  # 넘어온 requset들을 Json 형태로 변환
+        data ={
+            "userName": request.POST['userName'],
+            "userEmail": request.POST['userEmail'],
+            "userId": request.POST['userId'],
+            "userPassword": request.POST['userPassword'],
+            "userPasswordCheck": request.POST['userPasswordCheck'],
+            "userPreferenceEat": request.POST['userPreferenceEat'],
+            "userPreferenceDrink": request.POST['userPreferenceDrink'],
+            "userPreferenceCafe": request.POST['userPreferenceCafe']
+        }
+
+        # data = JSONParser().parse(request)  # 넘어온 requset들을 Json 형태로 변환
 
         for key, val in data.items():  # json은 key-value 형태 이기 때문에 key,val값으로 for문 진행
             if val == "" and key:  # 만약 빈값으로 넘어온 밸류가 있다면 오류문 출력하고, 나중에 페이지 이동까지 구현
@@ -128,28 +139,36 @@ def signup(request):
 @csrf_exempt
 def signin(request):
     if request.method == 'POST':  # 메소드가 post로 넘어온 경우
-        data = JSONParser().parse(request)  # 로그인 화면에서 얻어온 값을 json형태로 저장
+        data = {
+            "userId": request.POST['userId'],
+            "userPassword": request.POST['userPassword']
+        }
+        # data = JSONParser().parse(request)  # 로그인 화면에서 얻어온 값을 json형태로 저장
 
         if data.get('userId') == "" or data.get('userPassword') == "":  # 아이디 비밀번호 중 입력값이 없는 경우
-            return JsonResponse({'message': '아이디 또는 비밀번호를 입력하세요.'}, status=400)
+            return render(request, 'signin.html', {'message': '아이디 또는 비밀번호를 입력하세요.'}, status=400)
 
         if UserInfo.objects.filter(userId=data.get('userId')).exists():  # 아이디가 같은 것이 있는지 확인
             login_user = UserInfo.objects.get(userId=data.get('userId'))  # 아이디가 같은것이 있으면, 객체로 저장
 
             if bcrypt.checkpw(data.get('userPassword').encode('UTF-8'), login_user.userPassword.encode('UTF-8')):
                 request.session['user'] = login_user.userId  # session에 유저의 아이디를 기억
-                return JsonResponse({'message': '로그인 성공'}, status=201)  # 성공시 render를 통해 메인화면으로 이동
+                return render(request, 'Project/main.html', {'message': '로그인 성공'})  # 성공시 render를 통해 메인화면으로 이동
 
-            return JsonResponse({'message': '비밀번호를 확인해주세요.'}, status=400)  # 오류문 출력 이후, 로그인페이지로 이동
-        return JsonResponse({'message': '존재하지 않는 아이디 입니다.'}, status=400)  # 다시 로그인 페이지로 이동
+            return render(request, 'signin.html', {'message': '비밀번호를 확인해주세요.'}, status=400)  # 오류문 출력 이후, 로그인페이지로 이동
+        return render(request, 'signin.html', {'message': '존재하지 않는 아이디 입니다.'}, status=400)  # 다시 로그인 페이지로 이동
 
-    return JsonResponse({'message': 'Error'}, status=400)  # 나중에는 render로 페이지 이동을 시킬 예정
+    return render(request, 'signin.html', {'message': 'Error'}, status=400)  # 나중에는 render로 페이지 이동을 시킬 예정
 
 
 @csrf_exempt
 def findid(request):
     if request.method == 'POST':  # 메소드가 post로 넘어온 경우
-        data = JSONParser().parse(request)  # 넘어온 data를 json 형식으로 변환
+        data ={
+            "userName": request.POST['userName'],
+            "userEmail": request.POST['userEmail']
+        }
+        # data = JSONParser().parse(request)  # 넘어온 data를 json 형식으로 변환
 
         for key, val in data.items():  # json은 key-value 형태 이기 때문에 key,val값으로 for문 진행
             if val == "" and key:  # 만약 빈값으로 넘어온 밸류가 있다면 오류문 출력하고, 나중에 페이지 이동까지 구현
@@ -327,7 +346,6 @@ def crawling(request):
 
     driver.implicitly_wait(2)
 
-    driver.implicitly_wait(2)
     # if test1 + preferenceCategory == "가성비좋은":
     #     driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/div[8]/ul/li[1]/div').click()
     # elif test1 + preferenceCategory == "분위기좋은":
@@ -349,7 +367,7 @@ def crawling(request):
 
     driver.implicitly_wait(2)  # 웹사이트 로딩 될때까지 2초 기다림
 
-    items = driver.find_elements_by_css_selector('.Poiblock')  # 상품 정보를 모두 가지고 있는 div 태그 지정
+    items = driver.find_elements_by_css_selector('.PoiBlock')  # 상품 정보를 모두 가지고 있는 div 태그 지정
     print(len(items))
 
     for item in items:  # for문을 사용해서 상품 이름, 상품 주소를 출력
