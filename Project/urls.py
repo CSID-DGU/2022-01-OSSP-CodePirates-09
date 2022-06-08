@@ -10,7 +10,6 @@ urlpatterns = [
     path('', Default.as_view()),
 
     path('User/', include('User.urls')),
-    path('Course/', include('Course.urls')),
 
     # path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]

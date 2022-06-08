@@ -127,7 +127,6 @@ def signup(request):
 
 @csrf_exempt
 def signin(request):
-    return render(request, 'User/../templates/Project/signin.html')
     if request.method == 'POST':  # 메소드가 post로 넘어온 경우
         data = JSONParser().parse(request)  # 로그인 화면에서 얻어온 값을 json형태로 저장
 
@@ -275,9 +274,12 @@ def deleteuser(request):
 @csrf_exempt
 def crawling(request):
     # if request.method == 'GET': # 일단 위치 주소 받아야하고, 카테고리 누른 거받아야 해서 get으로 설정
-    location = "충무로역"  # 나중에는 입력받은 주소로 치환하기
-    category = "밥집"  # 나중에는 입력받은 카테고리로 치환하기
+    location = "충무로역"  # 나중에는 입력받은 주소로 치환하기 request.get('location')
+    category = "밥집"  # 나중에는 입력받은 카테고리로 치환하기 request.get('categoey')로 변경
     purpose = "점심식사"  # 나중에는 입력받은 방문목적으로 치환하기
+    preference = UserPreference.objects.get(userId=request.session['user'])  # 세션에 저장된 userId 사용해서 선호도 객체반환
+
+    test1 = "preference."
 
     driver = webdriver.Chrome('/Users/munchanghyeon/opt/chromedriver')  # 나중에는 프로젝트 파일에 포함시키기
     url = "https://www.diningcode.com"  # 다이닝코드 url를 저장
@@ -290,7 +292,7 @@ def crawling(request):
     search = driver.find_element_by_css_selector('#txt_keyword')  # 검색창 css 선택
     search.click()  # 입력을 위해 검색창 클릭
 
-    search.send_keys('충무로역')  # 클릭된 검색창에 특정 단어 입력
+    search.send_keys('충무로역') # 클릭된 검색창에 특정 단어 입력 //  나중에는 location으로 대체 //
     search.send_keys(Keys.ENTER)  # 입력을 완료하고 엔터키를 누름
 
     # 카테고리, 방문목적, 분위기 다 보기위해서 펼치기 버튼 클릭 첫번째는 카테고리, 두번째는 방문목적, 세번째는 분위기
@@ -302,19 +304,62 @@ def crawling(request):
         '#root > div > div > div.SearchFilter > div:nth-child(8) > button > div').click()
 
     # if문으로 카테고리 입력에 따라 클릭을 다르게 진행, 몇개 케이스가 없기 때문에 미리 진행
-    driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/div[3]/ul/li[2]/div').click()
-    driver.implicitly_wait(2)
-    driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/div[7]/ul/li[3]/div').click()
-    driver.implicitly_wait(2)
-    driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/div[8]/ul/li[1]/div').click()
+    if category == "술집":
+        driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/div[3]/ul/li[1]/div').click()
+        preferenceCategory = "preferenceDrink"
+    elif category == "밥집":
+        driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/div[3]/ul/li[2]/div').click()
+        preferenceCategory = "preferenceEat"
+    elif category == "카페":
+        driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/div[3]/ul/li[3]/div').click()
+        preferenceCategory = "preferenceCafe"
 
-    items = driver.find_elements_by_css_selector('.sc-gsnTZi.ebibPr.RBlockContainer')  # 상품 정보를 모두 가지고 있는 div 태그 지정
+    driver.implicitly_wait(2)
+
+    if purpose == "점심식사":
+        driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/div[7]/ul/li[2]/div').click()
+    elif purpose == "저녁식사":
+        driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/div[7]/ul/li[3]/div').click()
+    elif purpose == "데이트":
+        driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/div[7]/ul/li[7]/div').click()
+    elif purpose == "회식":
+        driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/div[7]/ul/li[8]/div').click()
+
+    driver.implicitly_wait(2)
+
+    driver.implicitly_wait(2)
+    # if test1 + preferenceCategory == "가성비좋은":
+    #     driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/div[8]/ul/li[1]/div').click()
+    # elif test1 + preferenceCategory == "분위기좋은":
+    #     driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/div[8]/ul/li[2]/div').click()
+    # elif test1 + preferenceCategory == "고급스러운":
+    #     driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/div[8]/ul/li[5]/div').click()
+    # elif test1 + preferenceCategory == "시끌벅적한":
+    #     driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/div[8]/ul/li[7]/div').click()
+    # elif test1 + preferenceCategory == "조용한":
+    #     driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/div[8]/ul/li[8]/div').click()
+    # elif test1 + preferenceCategory == "깔끔한":
+    #     driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/div[8]/ul/li[9]/div').click()
+    # elif test1 + preferenceCategory == "예쁜":
+    #     driver.find_element_by_xpath('//*[@id="root"]/div/div/div[1]/div[8]/ul/li[12]/div').click()
+
+    # 더보기 클릭해서 넘어가는 페이지 에서 크롤링 진행
+    more_btn = driver.find_element_by_css_selector('#root > div > div > div.Body > div.RList > div > button')  # 결과 더보기
+    more_btn.click()  # 클릭해서 진행
+
+    driver.implicitly_wait(2)  # 웹사이트 로딩 될때까지 2초 기다림
+
+    items = driver.find_elements_by_css_selector('.Poiblock')  # 상품 정보를 모두 가지고 있는 div 태그 지정
+    print(len(items))
 
     for item in items:  # for문을 사용해서 상품 이름, 상품 주소를 출력
         name = item.find_element_by_css_selector('.InfoHeader > h2').get_attribute('innerText')  # .text가 안먹어서 설정
-        category = item.find_element_by_css_selector('.Category > span').get_attribute('innerText')  # 나중에 카테고리도 출력
-        print(name)
-        print(category)
+        address = item.find_element_by_css_selector('.Category > span').get_attribute('innerText')  # 나중에 카테고리도 출력
+        review = item.find_element_by_css_selector('.Review').get_attribute('innerText')  # 리뷰 출력
+        name = re.sub(r"[0-9.]", "", name)
+        print("가게명 : " + name)
+        print("가게 주소 : " + address)
+        print("대표 리뷰 : " + review)
         print("######")
 
     return 0  # 나중에는 이동할 페이지나 리턴 값 구현
