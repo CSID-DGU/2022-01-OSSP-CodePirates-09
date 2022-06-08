@@ -127,7 +127,7 @@ def signup(request):
 
 @csrf_exempt
 def signin(request):
-    return render(request, 'User/signin.html')
+    return render(request, 'User/../templates/Project/signin.html')
     if request.method == 'POST':  # 메소드가 post로 넘어온 경우
         data = JSONParser().parse(request)  # 로그인 화면에서 얻어온 값을 json형태로 저장
 
