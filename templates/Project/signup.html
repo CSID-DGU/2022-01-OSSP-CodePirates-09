@@ -110,15 +110,15 @@
 <div id="content">
     <img class="logo" alt="logo" src="images/#">
 
-    <form>
-        <input type="text" name="username" class="signup_input_text" placeholder="이름을 입력하세요"><br>
-        <input type="text" name="email" class="signup_input_text" placeholder="이메일을 입력하세요"><br>
-        <input type="text" name="id" class="signup_input_text" placeholder="아이디를 입력하세요"><br>
-        <input type="password" name="password" class="signup_input_text" placeholder="비밀번호를 입력하세요"><br>
-        <input type="password" name="passwordcheck" class="signup_input_text" placeholder="비밀번호를 다시 입력하세요"><br>
+    <form action="User/signup/" method ="POST">
+        <input type="text" name="userName" class="signup_input_text" placeholder="이름을 입력하세요"><br>
+        <input type="text" name="userEmail" class="signup_input_text" placeholder="이메일을 입력하세요"><br>
+        <input type="text" name="userId" class="signup_input_text" placeholder="아이디를 입력하세요"><br>
+        <input type="password" name="userPassword" class="signup_input_text" placeholder="비밀번호를 입력하세요"><br>
+        <input type="password" name="userPasswordCheck" class="signup_input_text" placeholder="비밀번호를 다시 입력하세요"><br>
 
         취향 선택<br>
-        <select size="1">
+        <select size="1" name="userPreferenceEat">
             <option selected>밥집</option>
             <option value="1">가성비좋은</option>
             <option value="2">분위기좋은</option>
@@ -129,7 +129,7 @@
             <option value="7">예쁜</option>
         </select>
 
-        <select size="1">
+        <select size="1" name="userPreferenceDrink">
             <option selected>술집</option>
             <option value="1">가성비좋은</option>
             <option value="2">분위기좋은</option>
@@ -140,7 +140,7 @@
             <option value="7">예쁜</option>
         </select>
 
-        <select size="1">
+        <select size="1" name="userPreferenceCafe">
             <option selected>카페</option>
             <option value="1">가성비좋은</option>
             <option value="2">분위기좋은</option>
@@ -154,14 +154,14 @@
         <br>
         성별
         <br>
-        <select size="1" id="sex_select">
+        <select size="1" name="userSex">
             <option selected>성별</option>
             <option value="1">남자</option>
             <option value="2">여자</option>
         </select>
 
         <br>나이<br>
-        <select size="1" id="age_select">
+        <select size="1" name="userAge">
             <option selected>나이</option>
             <option value="20">20</option>
             <option value="21">21</option>
