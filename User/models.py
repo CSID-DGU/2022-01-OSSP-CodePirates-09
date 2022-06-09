@@ -14,6 +14,6 @@ class UserInfo(models.Model):
 class UserPreference(models.Model):
     id = models.BigAutoField(primary_key=True)
     userId = models.ForeignKey(UserInfo, on_delete=models.CASCADE, db_column='userId')
-    preferenceEat = models.TextField(blank=True)
-    preferenceDrink = models.TextField(blank=True)
-    preferenceCafe = models.TextField(blank=True)
+    userPreferenceEat = models.TextField(blank=True)
+    userPreferenceDrink = models.TextField(blank=True)
+    userPreferenceCafe = models.TextField(blank=True)
