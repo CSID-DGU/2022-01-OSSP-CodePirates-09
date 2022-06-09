@@ -60,7 +60,7 @@ def user(request, userId):
 @csrf_exempt
 def signup(request):
     if request.method == 'POST':
-        data ={
+        data = {
             "userName": request.POST['userName'],
             "userEmail": request.POST['userEmail'],
             "userId": request.POST['userId'],
@@ -68,7 +68,9 @@ def signup(request):
             "userPasswordCheck": request.POST['userPasswordCheck'],
             "userPreferenceEat": request.POST['userPreferenceEat'],
             "userPreferenceDrink": request.POST['userPreferenceDrink'],
-            "userPreferenceCafe": request.POST['userPreferenceCafe']
+            "userPreferenceCafe": request.POST['userPreferenceCafe'],
+            "userSex": request.POST['userSex'],
+            "userAge": request.POST['userAge']
         }
 
         # data = JSONParser().parse(request)  # 넘어온 requset들을 Json 형태로 변환
@@ -106,24 +108,14 @@ def signup(request):
             preference = {  # foreignkey로 참조한 자식테이블이기 때문에 나눠서 데이터 저장,
                 # 그리고 userInfo가 선행되어서 저장되어야하기 때문에 if문으로 조건 진행
                 "userId": data.get("userId"),
-                "preferenceEat": data.get("preferenceEat"),
-                "preferencePlay": data.get("preferencePlay"),
-                "preferenceDrink": data.get("preferenceDrink"),
-                "preferenceSee": data.get("preferenceSee"),
-                "preferenceWalk": data.get("preferenceWalk")
+                "userPreferenceEat": data.get("userPreferenceEat"),
+                "userPreferenceCafe": data.get("userPreferenceCafe"),
+                "userPreferenceDrink": data.get("userPreferenceDrink")
             }
             prefer_serializer = UserPreferenceSerializer(data=preference)  # preference로 저장한 딕셔너리형태 db에 저장
             if prefer_serializer.is_valid():
                 prefer_serializer.save()
-
-                partner = {
-                    "userId": data.get('userId')
-                }  # 회원가입시 partner 관련 DB도 같이 생성 처음엔 null 값
-                partner_serializer = UserPartnerSerializer(data=partner)  # partner로 저장한 딕셔너리 형태 db에 저장
-                if partner_serializer.is_valid():
-                    partner_serializer.save()
-
-                    return JsonResponse({'message': '회원 가입 성공'}, status=201)  # 두 테이블이 모두 저장되면 회원가입 성공 !
+                return render(request, 'Project/main.html', {'message': '회원 가입 성공'}, status=201)  # 두 테이블이 모두 저장되면 회원가입 성공 !
 
         return HttpResponse({"message : Error"}, status=400)  # 그렇지 않으면 실패
 
@@ -143,6 +135,7 @@ def signin(request):
             "userId": request.POST['userId'],
             "userPassword": request.POST['userPassword']
         }
+
         # data = JSONParser().parse(request)  # 로그인 화면에서 얻어온 값을 json형태로 저장
 
         if data.get('userId') == "" or data.get('userPassword') == "":  # 아이디 비밀번호 중 입력값이 없는 경우
@@ -164,7 +157,7 @@ def signin(request):
 @csrf_exempt
 def findid(request):
     if request.method == 'POST':  # 메소드가 post로 넘어온 경우
-        data ={
+        data = {
             "userName": request.POST['userName'],
             "userEmail": request.POST['userEmail']
         }
@@ -190,7 +183,13 @@ def findid(request):
 @csrf_exempt
 def findpw(request):
     if request.method == 'POST':
-        data = JSONParser().parse(request)
+        data = { # 나중에 form태그 순서 맞추기
+            "userName":request.POST['userName'],
+            "userEmail":request.POST['userEmail'],
+            "userId":request.POST['userId']
+        }
+        # data = JSONParser().parse(request)
+
 
         for key, val in data.items():  # json은 key-value 형태 이기 때문에 key,val값으로 for문 진행
             if val == "" and key:  # 만약 빈값으로 넘어온 밸류가 있다면 오류문 출력하고, 나중에 페이지 이동까지 구현
@@ -224,16 +223,13 @@ def mypage(request):  # 아니면 인자로 userId를 받아도 됨
     if request.method == 'GET':  # 마이페이지에 데이터를 띄우기 위한 method
         userObj = UserInfo.objects.get(userId=userId)  # userId로 userinfo 데이터베이스에 있는 object를 가져옴
         preferenceObj = UserPreference.objects.get(userId=userId)  # userId로 userPreferenc 데이터베이스에 있는 object를 가져옴
-        partnerObj = UserPartner.objects.get(userId=userId)  # userId로 userPartner 데이터베이스에 있는 object를 가져옴
 
         info_user = UserInfoSerializer(userObj)  # UserInfo 데이터 베이스의 값들을 JSON 형태로 변환해서 저장
         info_preference = UserPreferenceSerializer(preferenceObj)  # userPreference 데이터 베이스의 값들을 JSON 형태로 저장
-        info_partner = UserPartnerSerializer(partnerObj)  # userPartner 데이터 베이스의 값들을 JSON 형태로 저장
 
         userInfomation = {  # userInfo, userPreference, userPartner DB 저장데이터들을 하나로 묶은 형태
             "user": info_user.data,
             "preference": info_preference.data,
-            "partner": info_partner.data
         }
         # print(userInfomation.get('user'))  # 데이터를 받아서 출력하는 예시
         # example = userInfomation.get('user') # 데이터를 받아서 출력하는 예시
@@ -269,10 +265,8 @@ def mypage(request):  # 아니면 인자로 userId를 받아도 됨
 
         Info_preference = UserPreference.objects.get(userId=userId)  # userId를 이용하여 사용자의 선호도 객체 반환
         Info_preference.preferenceEat = data.get('preferenceEat')  # 입력된 값으로 db 값 변경
-        Info_preference.preferencePlay = data.get('preferencePlay')  # 입력된 값으로 db 값 변경
         Info_preference.preferenceDrink = data.get('preferenceDrink')  # 입력된 값으로 db 값 변경
-        Info_preference.preferenceSee = data.get('preferenceSee')  # 입력된 값으로 db 값 변경
-        Info_preference.preferenceWalk = data.get('preferenceWalk')  # 입력된 값으로 db 값 변경
+        Info_preference.preferenceCafe = data.get('preferenceCafe')  # 입력된 값으로 db 값 변경
 
         Info_user.save()  # 변경된 사항을 db에 반영하고 저장
         Info_preference.save()  # 변경된 사항을 db에 반영하고 저장
