@@ -72,7 +72,7 @@ def signup(request):
             "userSex": request.POST['userSex'],
             "userAge": request.POST['userAge']
         }
-
+        print(data)
         # data = JSONParser().parse(request)  # 넘어온 requset들을 Json 형태로 변환
 
         for key, val in data.items():  # json은 key-value 형태 이기 때문에 key,val값으로 for문 진행
@@ -100,7 +100,7 @@ def signup(request):
             "userSex": data.get("userSex"),
             "userAge": data.get("userAge")
         }
-
+        print(userinfo)
         userinfo_serializer = UserInfoSerializer(data=userinfo)  # userinfo로 저장한 딕셔너리형태 db에 저장
         if userinfo_serializer.is_valid():
             userinfo_serializer.save()
@@ -109,12 +109,14 @@ def signup(request):
                 # 그리고 userInfo가 선행되어서 저장되어야하기 때문에 if문으로 조건 진행
                 "userId": data.get("userId"),
                 "userPreferenceEat": data.get("userPreferenceEat"),
-                "userPreferenceCafe": data.get("userPreferenceCafe"),
-                "userPreferenceDrink": data.get("userPreferenceDrink")
+                "userPreferenceDrink": data.get("userPreferenceDrink"),
+                "userPreferenceCafe": data.get("userPreferenceCafe")
             }
+            print(preference)
             prefer_serializer = UserPreferenceSerializer(data=preference)  # preference로 저장한 딕셔너리형태 db에 저장
             if prefer_serializer.is_valid():
                 prefer_serializer.save()
+                print("여기서 에러면 실망")
                 return render(request, 'Project/main.html', {'message': '회원 가입 성공'}, status=201)  # 두 테이블이 모두 저장되면 회원가입 성공 !
 
         return HttpResponse({"message : Error"}, status=400)  # 그렇지 않으면 실패

@@ -8,9 +8,9 @@ class UserPreferenceSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'userId',
-            'preferenceEat',
-            'preferenceDrink',
-            'preferenceCafe'
+            'userPreferenceEat',
+            'userPreferenceDrink',
+            'userPreferenceCafe'
         )
         model = UserPreference
 
