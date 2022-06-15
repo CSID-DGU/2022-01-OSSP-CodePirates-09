@@ -88,25 +88,29 @@
 </head>
 <body>
 <div id="content">
+    <a href ="main">
     <img class="logo" alt="logo" src="images/logo.png">
+    </a>
     <br>
 
-    <form>
-        <select size="1">
+    <form action ="User/creatcourse/" method = "GET">
+    {#  위치 검색하는 태그 들어가는 자리#}
+
+        <select size="1" name="1stcategory">
             <option selected>카테고리</option>
             <option value="1">점심식사</option>
             <option value="2">저녁식사</option>
             <option value="3">술집</option>
             <option value="4">카페</option>
         </select>
-        <select size="1">
+        <select size="1" name="2ndcategory">
             <option selected>카테고리</option>
             <option value="1">점심식사</option>
             <option value="2">저녁식사</option>
             <option value="3">술집</option>
             <option value="4">카페</option>
         </select>
-        <select size="1">
+        <select size="1" name="3rdcategory">
             <option selected>카테고리</option>
             <option value="1">점심식사</option>
             <option value="2">저녁식사</option>
