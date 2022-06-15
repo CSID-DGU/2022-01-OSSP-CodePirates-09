@@ -19,8 +19,8 @@ import time
 import re  # 정규 표현식을 지원
 import json
 import bcrypt  # 비밀번호 암호화를 위해서 패키지 다운로드
-import pandas as pd # 크롤링하고 분석끝난 데이터 엑셀 파일을 가져오기 위한 import
-import openpyxl # 엑셀 파일을 열고 데이터를 읽기
+import pandas as pd  # 크롤링하고 분석끝난 데이터 엑셀 파일을 가져오기 위한 import
+import openpyxl  # 엑셀 파일을 열고 데이터를 읽기
 
 
 @csrf_exempt
@@ -154,7 +154,8 @@ def signin(request):
                 request.session['user'] = login_user.userId  # session에 유저의 아이디를 기억
                 return redirect(views.main)  # 성공시 render를 통해 메인화면으로 이동
 
-            return render(request, 'Project/signin.html', {'message': '비밀번호를 확인해주세요.'}, status=400)  # 오류문 출력 이후, 로그인페이지로 이동
+            return render(request, 'Project/signin.html', {'message': '비밀번호를 확인해주세요.'},
+                          status=400)  # 오류문 출력 이후, 로그인페이지로 이동
         return render(request, 'Project/signin.html', {'message': '존재하지 않는 아이디 입니다.'}, status=400)  # 다시 로그인 페이지로 이동
 
     return render(request, 'Project/signin.html', {'message': 'Error'}, status=400)  # 나중에는 render로 페이지 이동을 시킬 예정
@@ -189,13 +190,12 @@ def findid(request):
 @csrf_exempt
 def findpw(request):
     if request.method == 'POST':
-        data = { # 나중에 form태그 순서 맞추기
-            "userName":request.POST['userName'],
-            "userEmail":request.POST['userEmail'],
-            "userId":request.POST['userId']
+        data = {  # 나중에 form태그 순서 맞추기
+            "userName": request.POST['userName'],
+            "userEmail": request.POST['userEmail'],
+            "userId": request.POST['userId']
         }
         # data = JSONParser().parse(request)
-
 
         for key, val in data.items():  # json은 key-value 형태 이기 때문에 key,val값으로 for문 진행
             if val == "" and key:  # 만약 빈값으로 넘어온 밸류가 있다면 오류문 출력하고, 나중에 페이지 이동까지 구현
@@ -311,7 +311,7 @@ def crawling(request):
     search = driver.find_element_by_css_selector('#txt_keyword')  # 검색창 css 선택
     search.click()  # 입력을 위해 검색창 클릭
 
-    search.send_keys(location) # 클릭된 검색창에 특정 단어 입력 //  나중에는 location으로 대체 //
+    search.send_keys(location)  # 클릭된 검색창에 특정 단어 입력 //  나중에는 location으로 대체 //
     search.send_keys(Keys.ENTER)  # 입력을 완료하고 엔터키를 누름
 
     # 카테고리, 방문목적, 분위기 다 보기위해서 펼치기 버튼 클릭 첫번째는 카테고리, 두번째는 방문목적, 세번째는 분위기
@@ -391,72 +391,72 @@ def crawling(request):
     # f.close()
     return 0  # 나중에는 이동할 페이지나 리턴 값 구현
 
+
 @csrf_exempt
 def createcourse(request):
     if request.method == 'GET':
         data = {
-            "location": request.GET['location'], # 검색한 위치 받기
-            "1stcategory": request.GET['1stcategory'], # 첫번째 카테고리 받기
-            "2ndcategory": request.GET['2ndcategory'], # 두번째 카테고리 받기
-            "3rdcategory": request.GET['3rdcategory'] # 세번쨰 카테고리 빋기
+            "location": request.GET['location'],  # 검색한 위치 받기
+            "1stcategory": request.GET['1stcategory'],  # 첫번째 카테고리 받기
+            "2ndcategory": request.GET['2ndcategory'],  # 두번째 카테고리 받기
+            "3rdcategory": request.GET['3rdcategory']  # 세번쨰 카테고리 빋기
         }
 
-        firstcourse = data.get('location') + "." + data.get('1stcategory') # 첫번째 코스 sheet 저장
-        secondcourse = data.get('location') + "." + data.get('2ndcategory') # 두번째 코스 sheet 저장
-        thirdcourse = data.get('location') + "." + data.get('3rdcategory') # 세번쨰 코스 sheet 저장
+        firstcourse = data.get('location') + "." + data.get('1stcategory')  # 첫번째 코스 sheet 저장
+        secondcourse = data.get('location') + "." + data.get('2ndcategory')  # 두번째 코스 sheet 저장
+        thirdcourse = data.get('location') + "." + data.get('3rdcategory')  # 세번쨰 코스 sheet 저장
 
-        filename = "data.xlsx" # 열기위한 파일명 저장
-        xlxs = load_workbook(filename=filename) # 저장한 filename를 통해서 엑셀 파일 열기
+        filename = "data.xlsx"  # 열기위한 파일명 저장
+        xlxs = load_workbook(filename=filename)  # 저장한 filename를 통해서 엑셀 파일 열기
         # xlxs = pd.read_excel(filename, sheet_name=firstcourse)
 
-        onesheet = xlxs[firstcourse] # 첫번째 카테고리에 대한 시트명 저장
-        twosheet = xlxs[secondcourse] # 두번째 카테고리에 대한 시트명 저장
-        threesheet = xlxs[thirdcourse] # 세번쨰 카테고리에 대한 시트명 저장
+        onesheet = xlxs[firstcourse]  # 첫번째 카테고리에 대한 시트명 저장
+        twosheet = xlxs[secondcourse]  # 두번째 카테고리에 대한 시트명 저장
+        threesheet = xlxs[thirdcourse]  # 세번쨰 카테고리에 대한 시트명 저장
 
-        fincourse = [] # 최종 코스를 저장하기 위한 리스트
+        fincourse = []  # 최종 코스를 저장하기 위한 리스트
 
         # 이거 전체를 for문으로 감싸서 3번 반복하는 방법도 생각해볼것 !
 
-        row = onesheet[2] # 가져올 열 번호 지정
+        row = onesheet[2]  # 가져올 열 번호 지정
         for cell in row:
-            fincourse += [cell.value] # 추출된 데이터를 추가
+            fincourse += [cell.value]  # 추출된 데이터를 추가
 
-        row = twosheet[16] # 가져올 열 번호 저장
+        row = twosheet[16]  # 가져올 열 번호 저장
         for cell in row:
-            fincourse += [cell.value] # 추출된 데이터를 추가
+            fincourse += [cell.value]  # 추출된 데이터를 추가
 
-        row = threesheet[8] # 가져올 열 번호 저장
+        row = threesheet[8]  # 가져올 열 번호 저장
         for cell in row:
-            fincourse += [cell.value] # 추출된 데이터를 추가
+            fincourse += [cell.value]  # 추출된 데이터를 추가
 
         print(fincourse)
-        print(onesheet['C1'].value) # 하나의 셀을 저장하는 방식
-        context ={
+        print(onesheet['C1'].value)  # 하나의 셀을 저장하는 방식
+        context = {
             '1sttitle': fincourse[0],
-            '1stloc':fincourse[1],
-            '1streview':fincourse[2],
-            '1stimage':fincourse[3],
-            '2ndtitle':fincourse[4],
-            '2ndloc':fincourse[5],
-            '2ndreview':fincourse[6],
-            '2ndimage':fincourse[7],
-            '3rdtitle':fincourse[8],
-            '3rdloc':fincourse[9],
-            '3rdreview':fincourse[10],
-            '3rdimage':fincourse[11],
-            'location' : data.get('location'),
-            '1stcategory':data.get('1stcategory'),
-            '2ndcategory':data.get('2ndcategory'),
-            '3rdcategory':data.get('3rdcategory'),
+            '1stloc': fincourse[1],
+            '1streview': fincourse[2],
+            '1stimage': fincourse[3],
+            '2ndtitle': fincourse[4],
+            '2ndloc': fincourse[5],
+            '2ndreview': fincourse[6],
+            '2ndimage': fincourse[7],
+            '3rdtitle': fincourse[8],
+            '3rdloc': fincourse[9],
+            '3rdreview': fincourse[10],
+            '3rdimage': fincourse[11],
+            'location': data.get('location'),
+            '1stcategory': data.get('1stcategory'),
+            '2ndcategory': data.get('2ndcategory'),
+            '3rdcategory': data.get('3rdcategory'),
         }
 
         print(context)
 
-        return render(request, 'Project/main1.html', {'context':context})
+        return render(request, 'Project/main1.html', {'context': context})
 
 
 @csrf_exempt
 def main(request):
     if request.method == 'GET':
         return redirect(views.main)
-

@@ -31,7 +31,6 @@ class UserInfoSerializer(serializers.ModelSerializer):
         )
         model = UserInfo
 
-
 # class UserInfoSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = UserInfo
