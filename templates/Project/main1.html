@@ -104,35 +104,20 @@
     <img class="logo" alt="logo" src="images/logo.png">
     </a>
     <br>
-
-    <form action ="User/createcourse/" method = "GET">
-        <input type="text" name="location" class="location_input_text" placeholder="위치 정보를 입력하세요."><br>
-        <select size="1" name="1stcategory">
-            <option selected>카테고리</option>
-            <option value="점심식사">점심식사</option>
-            <option value="저녁식사">저녁식사</option>
-            <option value="술집">술집</option>
-            <option value="카페">카페</option>
-        </select>
-        <select size="1" name="2ndcategory">
-            <option selected>카테고리</option>
-            <option value="점심식사">점심식사</option>
-            <option value="저녁식사">저녁식사</option>
-            <option value="술집">술집</option>
-            <option value="카페">카페</option>
-        </select>
-        <select size="1" name="3rdcategory">
-            <option selected>카테고리</option>
-            <option value="점심식사">점심식사</option>
-            <option value="저녁식사">저녁식사</option>
-            <option value="술집">술집</option>
-            <option value="카페">카페</option>
-        </select>
-
-
-        <button class="category_select_btn">완료</button>
-    </form>
     <div>
+        {{ context.location}} -> 입력받은 위치
+    </div>
+    <div>
+        {{ context.1stcategory }} -> 입력받은 카테고리 띄우기
+    </div>
+    <div>
+           {{ context.1sttitle}} -> 순서대로 첫번째 가게관련 데이터
+    </div>
+    <div>
+        {{ context.2ndtitle }} -> 순서대로 두번째 가게관련 데이터
+    </div>
+    <div>
+        {{ context.3rdtitle }} -> 순서대로 세번째 가게관련 데이터
     </div>
 </div>
 </body>

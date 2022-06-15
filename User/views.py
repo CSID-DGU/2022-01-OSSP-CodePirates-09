@@ -429,6 +429,23 @@ def createcourse(request):
 
         print(fincourse)
         print(onesheet['C1'].value) # 하나의 셀을 저장하는 방식
+        context ={
+            '1sttitle': fincourse[0],
+            '1stloc':fincourse[1],
+            '1streview':fincourse[2],
+            '2ndtitle':fincourse[3],
+            '2ndloc':fincourse[4],
+            '2ndreview':fincourse[5],
+            '3rdtitle':fincourse[6],
+            '3rdloc':fincourse[7],
+            '3rdreview':fincourse[8],
+            'location' : data.get('location'),
+            '1stcategory':data.get('1stcategory'),
+            '2ndcategory':data.get('2ndcategory'),
+            '3rdcategory':data.get('3rdcategory')
+        }
 
-        return JsonResponse()
+        print(context)
+
+        return render(request, 'Project/main1.html', {'context':context})
 
