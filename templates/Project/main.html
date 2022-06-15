@@ -76,15 +76,6 @@
             background-color: #dfdfdf;
         }
 
-        .listup_market {
-            width: 500px;
-            height: 150px;
-        }
-
-        .market_thumbnail {
-            height: 150px;
-        }
-
         .location_input_text {
             width: 330px;
             height: 50px;
@@ -101,12 +92,12 @@
 </head>
 <body>
 <div id="content">
-    <a href ="main">
-    <img class="logo" alt="logo" src="{% static "/images/logo.png" %}">
+    <a href="main">
+        <img class="logo" alt="logo" src="{% static "/images/logo.png" %}">
     </a>
     <br>
 
-    <form action ="User/createcourse/" method = "GET">
+    <form action="User/createcourse/" method="GET">
         <input type="text" name="location" class="location_input_text" placeholder="위치 정보를 입력하세요."><br>
         <select size="1" name="1stcategory">
             <option selected>카테고리</option>
