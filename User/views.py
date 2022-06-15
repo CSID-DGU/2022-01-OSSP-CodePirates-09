@@ -373,6 +373,7 @@ def crawling(request):
     # csvWriter = csv.writer(f)
 
     for item in items:  # for문을 사용해서 상품 이름, 상품 주소를 출력
+        image = item.find_element_by_css_selector('.RHeader > img').get_attribute('src')
         name = item.find_element_by_css_selector('.InfoHeader > h2').get_attribute('innerText')  # .text가 안먹어서 설정
         address = item.find_element_by_css_selector('.Category > span').get_attribute('innerText')  # 나중에 카테고리도 출력
         try:
@@ -380,11 +381,12 @@ def crawling(request):
         except:
             review = "리뷰가 없습니다."
         name = re.sub(r"[0-9.]", "", name)
+        print("이미지 : " + image)
         print("가게명 : " + name)
         print("가게 주소 : " + address)
         print("대표 리뷰 : " + review)
         print("######")
-      #  csvWriter.writerow([name, address, review])
+        # csvWriter.writerow([name, address, review,image])
 
     # f.close()
     return 0  # 나중에는 이동할 페이지나 리턴 값 구현
@@ -433,16 +435,19 @@ def createcourse(request):
             '1sttitle': fincourse[0],
             '1stloc':fincourse[1],
             '1streview':fincourse[2],
-            '2ndtitle':fincourse[3],
-            '2ndloc':fincourse[4],
-            '2ndreview':fincourse[5],
-            '3rdtitle':fincourse[6],
-            '3rdloc':fincourse[7],
-            '3rdreview':fincourse[8],
+            '1stimage':fincourse[3],
+            '2ndtitle':fincourse[4],
+            '2ndloc':fincourse[5],
+            '2ndreview':fincourse[6],
+            '2ndimage':fincourse[7],
+            '3rdtitle':fincourse[8],
+            '3rdloc':fincourse[9],
+            '3rdreview':fincourse[10],
+            '3rdimage':fincourse[11],
             'location' : data.get('location'),
             '1stcategory':data.get('1stcategory'),
             '2ndcategory':data.get('2ndcategory'),
-            '3rdcategory':data.get('3rdcategory')
+            '3rdcategory':data.get('3rdcategory'),
         }
 
         print(context)
