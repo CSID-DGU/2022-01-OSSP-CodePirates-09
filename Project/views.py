@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rest_framework.views import APIView
 
 
@@ -12,7 +12,7 @@ class Default(APIView):
 
 def main(request):
     if request.method == 'GET':
-        return z(request, 'Project/main.html')
+        return render(request, 'Project/main.html')
 
 
 def default(request):

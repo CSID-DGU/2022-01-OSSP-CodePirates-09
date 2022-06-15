@@ -449,3 +449,9 @@ def createcourse(request):
 
         return render(request, 'Project/main1.html', {'context':context})
 
+
+@csrf_exempt
+def main(request):
+    if request.method == 'GET':
+        return redirect(views.main)
+

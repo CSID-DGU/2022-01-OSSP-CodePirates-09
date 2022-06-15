@@ -12,5 +12,6 @@ urlpatterns = [
     path('deleteuser/', views.deleteuser),
     path('findpw/', views.findpw),
     path('crawling/', views.crawling),
-    path('createcourse/', views.createcourse)
+    path('createcourse/', views.createcourse),
+    path('createcourse/main/', views.main)
 ]
