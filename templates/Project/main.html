@@ -84,6 +84,18 @@
             height: 150px;
         }
 
+        .location_input_text {
+            width: 330px;
+            height: 50px;
+            border-radius: 11px;
+            border: solid 1px #dfdfdf;
+            background: #fff;
+            margin-bottom: 15px;
+            padding: 15px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
     </style>
 </head>
 <body>
@@ -93,29 +105,28 @@
     </a>
     <br>
 
-    <form action ="User/creatcourse/" method = "GET">
-    {#  위치 검색하는 태그 들어가는 자리#}
-
+    <form action ="User/createcourse/" method = "GET">
+        <input type="text" name="location" class="location_input_text" placeholder="위치 정보를 입력하세요."><br>
         <select size="1" name="1stcategory">
             <option selected>카테고리</option>
-            <option value="1">점심식사</option>
-            <option value="2">저녁식사</option>
-            <option value="3">술집</option>
-            <option value="4">카페</option>
+            <option value="점심식사">점심식사</option>
+            <option value="저녁식사">저녁식사</option>
+            <option value="술집">술집</option>
+            <option value="카페">카페</option>
         </select>
         <select size="1" name="2ndcategory">
             <option selected>카테고리</option>
-            <option value="1">점심식사</option>
-            <option value="2">저녁식사</option>
-            <option value="3">술집</option>
-            <option value="4">카페</option>
+            <option value="점심식사">점심식사</option>
+            <option value="저녁식사">저녁식사</option>
+            <option value="술집">술집</option>
+            <option value="카페">카페</option>
         </select>
         <select size="1" name="3rdcategory">
             <option selected>카테고리</option>
-            <option value="1">점심식사</option>
-            <option value="2">저녁식사</option>
-            <option value="3">술집</option>
-            <option value="4">카페</option>
+            <option value="점심식사">점심식사</option>
+            <option value="저녁식사">저녁식사</option>
+            <option value="술집">술집</option>
+            <option value="카페">카페</option>
         </select>
 
 
@@ -123,26 +134,6 @@
     </form>
     <div>
 
-    </div>
-    <div class="listup_market">
-        <img class="market_thumbnail" alt="thumbnail" src="images/#">
-        1번째 가게
-    </div>
-    <div class="listup_market">
-        <img class="market_thumbnail" alt="thumbnail" src="images/#">
-        2번째 가게
-    </div>
-    <div class="listup_market">
-        <img class="market_thumbnail" alt="thumbnail" src="images/#">
-        3번째 가게
-    </div>
-    <div class="listup_market">
-        <img class="market_thumbnail" alt="thumbnail" src="images/#">
-        4번째 가게
-    </div>
-    <div class="listup_market">
-        <img class="market_thumbnail" alt="thumbnail" src="images/#">
-        5번째 가게
     </div>
 </div>
 </body>
