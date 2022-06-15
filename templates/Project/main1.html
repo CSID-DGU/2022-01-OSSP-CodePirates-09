@@ -62,39 +62,32 @@
             font-size: 16px;
         }
 
-        .category_select_btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 11px;
-            border: solid 1px #dfdfdf;
-            background-color: #fff;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .category_select_btn:hover {
-            background-color: #dfdfdf;
-        }
-
         .listup_market {
             width: 500px;
             height: 150px;
         }
 
         .market_thumbnail {
+            float: left;
+            width: 150px;
             height: 150px;
         }
 
-        .location_input_text {
-            width: 330px;
-            height: 50px;
-            border-radius: 11px;
-            border: solid 1px #dfdfdf;
-            background: #fff;
-            margin-bottom: 15px;
-            padding: 15px;
-            box-sizing: border-box;
-            font-size: 16px;
+        .market_thumbnail {
+
+        }
+
+        .market_title,
+        .market_location {
+            float: left;
+            width: 350px;
+            height: 30px;
+        }
+
+        .market_review {
+            float: left;
+            width: 350px;
+            height: 90px;
         }
 
         .to_prior_btn {
@@ -119,37 +112,21 @@
     </a>
     <br>
     <div class="listup_market">
-        <div>
+        <div class="market_thumbnail">
             {{ context.location }}<br>
         </div>
-        <div>
-            {{ context.1stcategory }}<br>
+        <div class="market_title">
+            {{ context.1sttitle }}<br>
         </div>
-        <div>
-            {{ context.2ndcategory }}<br>
+        <div class="market_location">
+            {{ context.1stloc }}<br>
         </div>
-        <div>
-            {{ context.3rdcategory }}<br>
+        <div class="market_review">
+            {{ context.1streview }}<br>
         </div>
     </div>
-    <div class="listup_market">
-        {{ context.1stcategory }}<br>
-        {{ context.1sttitle }}<br>
-        {{ context.1stloc }}<br>
-        {{ context.1streview }}<br>
-    </div>
-    <div class="listup_market">
-        {{ context.2ndcategory }}<br>
-        {{ context.2ndtitle }}<br>
-        {{ context.2ndloc }}<br>
-        {{ context.2ndreview }}<br>
-    </div>
-    <div class="listup_market">
-        {{ context.3rdcategory }}<br>
-        {{ context.3rdtitle }}<br>
-        {{ context.3rdloc }}<br>
-        {{ context.3rdreview }}<br>
-    </div>
+
+
     <a href="main">
         <button type="button" class="to_prior_btn">뒤로가기</button>
     </a>
