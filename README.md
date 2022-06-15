@@ -1,23 +1,41 @@
-# 2022-01-OSSP1-CodePirates-09
+# 👨‍👩‍오늘 모해
 
-> ### Theme : 20대 커플 데이트 시 먹거리 코스 추천 
-</br>
+> ### Theme : 20대 커플 데이트 시 먹거리 코스 추천 웹
 
-## - About
+
+## - 💭About
 > ### 20대 커플이 데이트 할 때 
 
-## - Members
-| 팀장 | 팀원 | 팀원 | 팀원 |
-|:--:|:--:|:--:|:--:|
-|**김태욱**|**김성빈**|**문창현**|**조윤재**|
-|**FE, BE, crawling**|**FE**|**BE, Crawling, Data mining**|**FE**|
-</br>
+## - ⚡TEAM CodePirates⚡
+| Name | Role | Github |
+|:--:|:--:|:--:|
+|**김태욱**|**Leader / FE, BE, crawling**|**[Kim-TaeUk](https://github.com/Kim-TaeUk)**|
+|**김성빈**|**Member / FE**|**[notlikethisagain](https://github.com/notlikethisagain)**|
+|**문창현**|**Member / BE, Crawling, Data mining**|**[changhyn9](https://github.com/changhyun9)**|
+|**조윤재**|**Member / FE**|**[YJaes](https://github.com/YJaes)**|
 
-## - Tech Stack
-- **Django**
-</br>
 
-## - Commit Convention
+## - 📚Tech Stack
+### *Version Control*
+    Git/Github
+    
+### *Front-End*
+    Framework: Django
+
+### *Back-End*
+    Framework: Django
+    
+### *Database*
+    SQlite3
+    
+### *Crawling*
+    Selenium
+
+### *Data Mining*
+    KoNLpy
+
+
+## - 📌Commit Convention
 |**Type**|설명|
 |:--:|:--:|
 |**Docs** |  문서 작성 및 수정 작업(README 등)  |
@@ -29,4 +47,4 @@
 |**Del**   | 파일, 에셋 등 삭제 작업  |
 |**Set**   | 세팅 관련 작업  |
 |**Test**  |  테스트 관련 작업  |
-</br>
+
