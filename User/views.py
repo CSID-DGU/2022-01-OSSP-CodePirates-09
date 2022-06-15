@@ -419,11 +419,11 @@ def createcourse(request):
         for cell in row:
             fincourse += [cell.value] # 추출된 데이터를 추가
 
-        row = twosheet[3] # 가져올 열 번호 저장
+        row = twosheet[16] # 가져올 열 번호 저장
         for cell in row:
             fincourse += [cell.value] # 추출된 데이터를 추가
 
-        row = threesheet[15] # 가져올 열 번호 저장
+        row = threesheet[8] # 가져올 열 번호 저장
         for cell in row:
             fincourse += [cell.value] # 추출된 데이터를 추가
 

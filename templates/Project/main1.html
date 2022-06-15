@@ -97,29 +97,62 @@
             font-size: 16px;
         }
 
+        .to_prior_btn {
+            width: 100px;
+            height: 50px;
+            border-radius: 11px;
+            background-color: #5f29e2;
+            font-weight: bold;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+
     </style>
 </head>
 <body>
 <div id="content">
-    <a href ="main">
-    <img class="logo" alt="logo" src="{% static "/images/logo.png" %}">
+    <a href="main">
+        <img class="logo" alt="logo" src="{% static "/images/logo.png" %}">
     </a>
     <br>
-    <div>
-        {{ context.location}} -> 입력받은 위치
+    <div class="listup_market">
+        <div>
+            {{ context.location }}<br>
+        </div>
+        <div>
+            {{ context.1stcategory }}<br>
+        </div>
+        <div>
+            {{ context.2ndcategory }}<br>
+        </div>
+        <div>
+            {{ context.3rdcategory }}<br>
+        </div>
     </div>
-    <div>
-        {{ context.1stcategory }} -> 입력받은 카테고리 띄우기
+    <div class="listup_market">
+        {{ context.1stcategory }}<br>
+        {{ context.1sttitle }}<br>
+        {{ context.1stloc }}<br>
+        {{ context.1streview }}<br>
     </div>
-    <div>
-           {{ context.1sttitle}} -> 순서대로 첫번째 가게관련 데이터
+    <div class="listup_market">
+        {{ context.2ndcategory }}<br>
+        {{ context.2ndtitle }}<br>
+        {{ context.2ndloc }}<br>
+        {{ context.2ndreview }}<br>
     </div>
-    <div>
-        {{ context.2ndtitle }} -> 순서대로 두번째 가게관련 데이터
+    <div class="listup_market">
+        {{ context.3rdcategory }}<br>
+        {{ context.3rdtitle }}<br>
+        {{ context.3rdloc }}<br>
+        {{ context.3rdreview }}<br>
     </div>
-    <div>
-        {{ context.3rdtitle }} -> 순서대로 세번째 가게관련 데이터
-    </div>
+    <a href="main">
+        <button type="button" class="to_prior_btn">뒤로가기</button>
+    </a>
 </div>
 </body>
 </html>

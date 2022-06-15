@@ -12,7 +12,7 @@ class Default(APIView):
 
 def main(request):
     if request.method == 'GET':
-        return render(request, 'Project/main.html')
+        return z(request, 'Project/main.html')
 
 
 def default(request):
