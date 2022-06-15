@@ -2,9 +2,12 @@
 
 > ### Theme : 20대 커플 데이트 시 먹거리 코스 추천 웹
 
+<br>
 
 ## - 💭About
 > ### 20대 커플이 데이트 할 때 
+
+<br>
 
 ## - ⚡TEAM CodePirates⚡
 | Name | Role | Github |
@@ -13,6 +16,8 @@
 |**김성빈**|**Member / FE**|**[notlikethisagain](https://github.com/notlikethisagain)**|
 |**문창현**|**Member / BE, Crawling, Data mining**|**[changhyn9](https://github.com/changhyun9)**|
 |**조윤재**|**Member / FE**|**[YJaes](https://github.com/YJaes)**|
+
+<br>
 
 # - 🖥️Demo
 
@@ -30,6 +35,8 @@
 
 ## Course Recommend Page
 <img width="1680" alt="course recom" src="https://user-images.githubusercontent.com/71974850/173931223-ab3d2fd3-575a-4b55-bbaa-185f1c0d1e1a.png">
+
+<br>
 
 ## - 📚Tech Stack
 ### *Version Control*
@@ -53,6 +60,7 @@
 ### *Data Mining*
     KoNLPy(Kkma)
 
+<br>
 
 ## - 📌Commit Convention
 |**Type**|설명|
