@@ -14,25 +14,30 @@
 |**문창현**|**Member / BE, Crawling, Data mining**|**[changhyn9](https://github.com/changhyun9)**|
 |**조윤재**|**Member / FE**|**[YJaes](https://github.com/YJaes)**|
 
+# - 🖥️Demo
+
 
 ## - 📚Tech Stack
 ### *Version Control*
     Git/Github
     
+### Environment
+    PyCharm 2022.1.2 (Professional Edition)
+    
 ### *Front-End*
-    Framework: Django
+    Framework: Django(4.0.4 ver)
 
 ### *Back-End*
-    Framework: Django
+    Framework: Django(4.0.4 ver)
     
 ### *Database*
     SQlite3
     
 ### *Crawling*
-    Selenium
+    Selenium(4.2.0 ver)
 
 ### *Data Mining*
-    KoNLpy
+    KoNLPy(Kkma)
 
 
 ## - 📌Commit Convention
