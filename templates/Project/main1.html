@@ -79,11 +79,25 @@
             height: 150px;
         }
 
-        .market_thumbnail {
-
+        .img_thumbnail {
+            border-radius: 20px;
+            width: 138px;
+            height: 138px;
+            padding: 6px;
         }
 
-        .market_title,
+        .market_title {
+            float: left;
+            padding-left: 10px;
+            font-size: 22px;
+            font-weight: bold;
+            width: 340px;
+            height: 30px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+        }
+
         .market_location {
             float: left;
             padding-left: 10px;
@@ -117,6 +131,10 @@
             cursor: pointer;
         }
 
+        .to_prior_btn:hover {
+            background-color: #410BC4;
+        }
+
 
     </style>
 </head>
@@ -128,7 +146,7 @@
     <br>
     <div class="listup_market">
         <div class="market_thumbnail">
-            {{ context.location }}<br>
+            <img class="img_thumbnail" src="{{ context.1stimage }}" alt="no image"><br>
         </div>
         <div class="market_title">
             {{ context.1sttitle }}<br>
@@ -143,31 +161,31 @@
     <br><br>
     <div class="listup_market">
         <div class="market_thumbnail">
-            {{ context.location }}<br>
+            <img class="img_thumbnail" src="{{ context.2ndimage }}" alt="no image"><br>
         </div>
         <div class="market_title">
-            {{ context.1sttitle }}<br>
+            {{ context.2ndtitle }}<br>
         </div>
         <div class="market_location">
-            {{ context.1stloc }}<br>
+            {{ context.2ndloc }}<br>
         </div>
         <div class="market_review">
-            {{ context.1streview }}<br>
+            {{ context.2ndreview }}<br>
         </div>
     </div>
     <br><br>
     <div class="listup_market">
         <div class="market_thumbnail">
-            {{ context.location }}<br>
+            <img class="img_thumbnail" src="{{ context.3rdimage }}" alt="no image"><br>
         </div>
         <div class="market_title">
-            {{ context.1sttitle }}<br>
+            {{ context.3rdtitle }}<br>
         </div>
         <div class="market_location">
-            {{ context.1stloc }}<br>
+            {{ context.3rdloc }}<br>
         </div>
         <div class="market_review">
-            {{ context.1streview }}<br>
+            {{ context.3rdreview }}<br>
         </div>
     </div>
     <br><br>
