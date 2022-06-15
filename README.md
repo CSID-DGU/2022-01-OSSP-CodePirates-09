@@ -25,6 +25,12 @@
 ## Sign In Page
 <img width="1680" alt="signin" src="https://user-images.githubusercontent.com/71974850/173876512-0ece147f-fe6e-4604-a397-3df17d943574.png">
 
+## Course Select Page
+<img width="1680" alt="course select" src="https://user-images.githubusercontent.com/71974850/173931273-80b77e96-ac63-42c5-8ead-9ee35fef5344.png">
+
+## Course Recommend Page
+<img width="1680" alt="course recom" src="https://user-images.githubusercontent.com/71974850/173931223-ab3d2fd3-575a-4b55-bbaa-185f1c0d1e1a.png">
+
 ## - 📚Tech Stack
 ### *Version Control*
     Git/Github
