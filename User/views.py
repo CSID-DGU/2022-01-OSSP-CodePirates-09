@@ -12,6 +12,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from openpyxl import load_workbook
+from Project import views
 
 import csv
 import time
@@ -62,6 +63,7 @@ def user(request, userId):
 
 @csrf_exempt
 def signup(request):
+    response_data = {}
     if request.method == 'POST':
         data = {
             "userName": request.POST['userName'],
@@ -119,9 +121,8 @@ def signup(request):
             prefer_serializer = UserPreferenceSerializer(data=preference)  # preference로 저장한 딕셔너리형태 db에 저장
             if prefer_serializer.is_valid():
                 prefer_serializer.save()
-
-                return render(request, 'Project/main.html', {'message': '회원 가입 성공'}, status=201)  # 두 테이블이 모두 저장되면 회원가입 성공 !
-
+                response_data['error'] = "회원가입이 완료되었습니다."
+                return redirect(views.default)  # 두 테이블이 모두 저장되면 회원가입 성공 !
         return HttpResponse({"message : Error"}, status=400)  # 그렇지 않으면 실패
 
 
@@ -151,12 +152,12 @@ def signin(request):
 
             if bcrypt.checkpw(data.get('userPassword').encode('UTF-8'), login_user.userPassword.encode('UTF-8')):
                 request.session['user'] = login_user.userId  # session에 유저의 아이디를 기억
-                return render(request, 'Project/main.html', {'message': '로그인 성공'})  # 성공시 render를 통해 메인화면으로 이동
+                return redirect(views.main)  # 성공시 render를 통해 메인화면으로 이동
 
-            return render(request, 'signin.html', {'message': '비밀번호를 확인해주세요.'}, status=400)  # 오류문 출력 이후, 로그인페이지로 이동
-        return render(request, 'signin.html', {'message': '존재하지 않는 아이디 입니다.'}, status=400)  # 다시 로그인 페이지로 이동
+            return render(request, 'Project/signin.html', {'message': '비밀번호를 확인해주세요.'}, status=400)  # 오류문 출력 이후, 로그인페이지로 이동
+        return render(request, 'Project/signin.html', {'message': '존재하지 않는 아이디 입니다.'}, status=400)  # 다시 로그인 페이지로 이동
 
-    return render(request, 'signin.html', {'message': 'Error'}, status=400)  # 나중에는 render로 페이지 이동을 시킬 예정
+    return render(request, 'Project/signin.html', {'message': 'Error'}, status=400)  # 나중에는 render로 페이지 이동을 시킬 예정
 
 
 @csrf_exempt
@@ -391,13 +392,12 @@ def crawling(request):
 @csrf_exempt
 def createcourse(request):
     if request.method == 'GET':
-        # data = {
-        #     "location": request.GET['location'], # 검색한 위치 받기
-        #     "1stcategory": request.GET['1stcategory'], # 첫번째 카테고리 받기
-        #     "2ndcategory": request.GET['2ndcategory'], # 두번째 카테고리 받기
-        #     "3rdcategory": request.GET['3rdcategory'] # 세번쨰 카테고리 빋기
-        # }
-        data = JSONParser().parse(request)
+        data = {
+            "location": request.GET['location'], # 검색한 위치 받기
+            "1stcategory": request.GET['1stcategory'], # 첫번째 카테고리 받기
+            "2ndcategory": request.GET['2ndcategory'], # 두번째 카테고리 받기
+            "3rdcategory": request.GET['3rdcategory'] # 세번쨰 카테고리 빋기
+        }
 
         firstcourse = data.get('location') + "." + data.get('1stcategory') # 첫번째 코스 sheet 저장
         secondcourse = data.get('location') + "." + data.get('2ndcategory') # 두번째 코스 sheet 저장
@@ -430,21 +430,5 @@ def createcourse(request):
         print(fincourse)
         print(onesheet['C1'].value) # 하나의 셀을 저장하는 방식
 
-        return 0
+        return JsonResponse()
 
-# 내가 해야하는거 뭘까요 ?
-# 일단은 Ui를 구성해야하고 완료 버튼을 눌렀을 때,
-# 검색한 지역과 코스의 카테고리가 넘어와야함
-# 그럼 그것을 바탕으로 랜덤을 코스를 3개를 추천하는 것을 구현
-# 그리고 그걸 프론트에다가 출력해야함
-
-# 프론트에서는 다시 딕셔너리 형태로 넘어오는 가게 데이터를 표시하는 것
-# 그리고 검색하는 입력 인풋을 만들고 폼태그로 감싸서 카테고릴아 같이 넘어갈 수 있게 만들 것 !
-
-
-# 0. 프론트단에서 검색하는 태그 하나랑 완료 버튼 누르면 form 태그로 감싸서 백에 넘어오는 것까지 선행되어야 함
-# 1. 서버단에서 지역, 카테고리 받아서 가게 셋업하는 걸 (토요일까지) -> 끝남
-# 2. 서버에서 넘어온 가게 데이터를 프론트에서 출력하는 건 (일요일)
-# 3. 그리고 남은 페이지 연결과 자잘한 건 월요일 또는 화요일 또는 수요일에 끝내기
-# 4. 수요일 에는 데모 영상이랑 ppt 자료 만들어서 공소 끝내기
-# 5. 그리고 readme 작성하기
